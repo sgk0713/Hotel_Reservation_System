@@ -1,0 +1,129 @@
+CREATE TABLE tblHotel ( hHotelID INT NOT NULL, hName VARCHAR2(200) NOT NULL, hAddress VARCHAR2(200) NOT NULL, hEmail VARCHAR2(200) NULL, hPhone VARCHAR2(200) NOT NULL, hRank INT NULL, hWeb VARCHAR2(200) NULL, CONSTRAINT TBLHOTEL_PK PRIMARY KEY (hHotelID) )				
+COMMENT ON TABLE tblHotel IS '호텔 테이블'
+COMMENT ON COLUMN tblHotel.hHotelID IS '호텔 ID 주키'
+COMMENT ON COLUMN tblHotel.hName IS '호텔 이름'
+COMMENT ON COLUMN tblHotel.hAddress IS '호텔 주소'
+COMMENT ON COLUMN tblHotel.hEmail IS '호텔 메일'
+COMMENT ON COLUMN tblHotel.hPhone IS '호텔 전화번호'
+COMMENT ON COLUMN tblHotel.hRank IS '호텔 등급'
+COMMENT ON COLUMN tblHotel.hWeb IS '웹사이트 주소'
+CREATE TABLE tblRoom ( rRoomID INT NOT NULL, rHotelID INT NOT NULL, rRoomNumber INT NOT NULL, rFloor INT NOT NULL, rViewType INT NOT NULL, rPrice INT NOT NULL, rRoomType VARCHAR2(20) NOT NULL, rBed VARCHAR2(20) NOT NULL, CONSTRAINT TBLROOM_PK PRIMARY KEY (rRoomID) )
+CREATE SEQUENCE tblRoom_SEQ START WITH 1 INCREMENT BY 1
+COMMENT ON TABLE tblRoom IS '객실 테이블'
+COMMENT ON COLUMN tblRoom.rRoomID IS '객실 ID 주키'
+COMMENT ON COLUMN tblRoom.rHotelID IS '호텔 ID 외래키'
+COMMENT ON COLUMN tblRoom.rRoomNumber IS '객실 번호'
+COMMENT ON COLUMN tblRoom.rFloor IS '객실 층 정보'
+COMMENT ON COLUMN tblRoom.rViewType IS '객실 뷰 정보'
+COMMENT ON COLUMN tblRoom.rPrice IS '객실 가격'
+COMMENT ON COLUMN tblRoom.rRoomType IS '객실 타입'
+COMMENT ON COLUMN tblRoom.rBed IS '배드 타입'
+ALTER TABLE tblRoom ADD CONSTRAINT FK_tblRoom_rHotelID_tblHotel_h FOREIGN KEY (rHotelID) REFERENCES tblHotel (hHotelID)
+CREATE TABLE tblCustomer ( cCustomerID INT NOT NULL, cName VARCHAR2(200) NOT NULL, cPhone VARCHAR2(200) NOT NULL, cEmail VARCHAR2(200) NOT NULL, cAddress VARCHAR2(200) NOT NULL, cCardNumber VARCHAR2(200) NULL, cComment VARCHAR2(200) NULL, CONSTRAINT TBLCUSTOMER_PK PRIMARY KEY (cCustomerID) )
+CREATE SEQUENCE tblCustomer_SEQ START WITH 1 INCREMENT BY 1
+COMMENT ON TABLE tblCustomer IS '고객 테이블'
+COMMENT ON COLUMN tblCustomer.cCustomerID IS '고객 ID 주키'
+COMMENT ON COLUMN tblCustomer.cName IS '고객 이름'
+COMMENT ON COLUMN tblCustomer.cPhone IS '고객 전화번호'
+COMMENT ON COLUMN tblCustomer.cEmail IS '고객 이메일'
+COMMENT ON COLUMN tblCustomer.cAddress IS '고객 주소'
+COMMENT ON COLUMN tblCustomer.cCardNumber IS '고객 카드번호'
+COMMENT ON COLUMN tblCustomer.cComment IS '(직원이 남기는)코멘트'
+CREATE TABLE tblEmployee ( eEmployeeID INT NOT NULL, eHotelID INT NOT NULL, eName VARCHAR2(200) NOT NULL, eDepartment VARCHAR2(200) NOT NULL, eGender VARCHAR2(1) NOT NULL, eDateEnter DATE NOT NULL, ePosition VARCHAR2(200) NOT NULL, eSalary INT NOT NULL, CONSTRAINT TBLEMPLOYEE_PK PRIMARY KEY (eEmployeeID) )
+CREATE SEQUENCE tblEmployee_SEQ START WITH 1 INCREMENT by 1
+COMMENT ON TABLE tblEmployee IS '직원 테이블'
+COMMENT ON COLUMN tblEmployee.eEmployeeID IS '직원 ID 주키'
+COMMENT ON COLUMN tblEmployee.eHotelID IS '호텔 ID 외래키'
+COMMENT ON COLUMN tblEmployee.eName IS '직원 이름'
+COMMENT ON COLUMN tblEmployee.eDepartment IS '직원 부서'
+COMMENT ON COLUMN tblEmployee.eGender IS '직원 성별'
+COMMENT ON COLUMN tblEmployee.eDateEnter IS '직원 입사일'
+COMMENT ON COLUMN tblEmployee.ePosition IS '직원 직급'
+COMMENT ON COLUMN tblEmployee.eSalary IS '직원 급여'
+ALTER TABLE tblEmployee ADD CONSTRAINT FK_tblEmployee_eHotelID_tblHot FOREIGN KEY (eHotelID) REFERENCES tblHotel (hHotelID)
+CREATE TABLE tblFixture ( fFixtureID INT NOT NULL, fHotelID INT NOT NULL, fName VARCHAR2(200) NOT NULL, fType VARCHAR2(200) NOT NULL, fQuantity INT NOT NULL, CONSTRAINT TBLFIXTURE_PK PRIMARY KEY (fFixtureID) )
+COMMENT ON TABLE tblFixture IS '비품 테이블'
+COMMENT ON COLUMN tblFixture.fFixtureID IS '비품 ID'
+COMMENT ON COLUMN tblFixture.fHotelID IS '호텔 ID'
+COMMENT ON COLUMN tblFixture.fName IS '비품 이름'
+COMMENT ON COLUMN tblFixture.fType IS '비품 종류'
+COMMENT ON COLUMN tblFixture.fQuantity IS '비품 현재 수량'
+ALTER TABLE tblFixture ADD CONSTRAINT FK_tblFixture_fHotelID_tblHote FOREIGN KEY (fHotelID) REFERENCES tblHotel (hHotelID)
+CREATE TABLE tblDish ( dmDishID INT NOT NULL, dmName VARCHAR2(200) NOT NULL, dmPrice INT NOT NULL, dmImage BLOB NOT NULL, CONSTRAINT TBLDISH_PK PRIMARY KEY (dmDishID) )
+COMMENT ON TABLE tblDish IS '음식 메뉴 테이블'
+COMMENT ON COLUMN tblDish.dmDishID IS '음식 ID 주키'
+COMMENT ON COLUMN tblDish.dmName IS '음식 이름'
+COMMENT ON COLUMN tblDish.dmPrice IS '음식 가격'
+COMMENT ON COLUMN tblDish.dmImage IS '음식 사진'
+CREATE TABLE tblBookedRoom ( brBookID INT NOT NULL, brRoomID INT NOT NULL, brCustomerID INT NOT NULL, brDateEnter DATE NOT NULL, brDateExit DATE NOT NULL, brAdult INT NOT NULL, brChildren INT NOT NULL, brHkID INT NOT NULL, CONSTRAINT TBLBOOKEDROOM_PK PRIMARY KEY (brBookID) )
+CREATE SEQUENCE tblBookedRoom_SEQ START WITH 1 INCREMENT by 1
+COMMENT ON TABLE tblBookedRoom IS '예약된 룸 테이블'
+COMMENT ON COLUMN tblBookedRoom.brBookID IS '예약 ID 주키'
+COMMENT ON COLUMN tblBookedRoom.brRoomID IS '객실 ID 외래키'
+COMMENT ON COLUMN tblBookedRoom.brCustomerID IS '고객 ID 외래키'
+COMMENT ON COLUMN tblBookedRoom.brDateEnter IS '입실 날짜'
+COMMENT ON COLUMN tblBookedRoom.brDateExit IS '퇴실 날짜'
+COMMENT ON COLUMN tblBookedRoom.brAdult IS '성인인원'
+COMMENT ON COLUMN tblBookedRoom.brChildren IS '어린이인원'
+COMMENT ON COLUMN tblBookedRoom.brHkID IS '담당 하우스키퍼 ID'
+ALTER TABLE tblBookedRoom ADD CONSTRAINT FK_tblBookedRoom_brRoomID_tblR FOREIGN KEY (brRoomID) REFERENCES tblRoom (rRoomID)
+ALTER TABLE tblBookedRoom ADD CONSTRAINT FK_tblBookedRoom_brCustomerID_ FOREIGN KEY (brCustomerID) REFERENCES tblCustomer (cCustomerID)
+ALTER TABLE tblBookedRoom ADD CONSTRAINT FK_tblBookedRoom_brHkID_tblEmp FOREIGN KEY (brHkID) REFERENCES tblEmployee (eEmployeeID)
+CREATE TABLE tblDishOrder ( doDishOrderID INT NOT NULL, doDishID INT NOT NULL, doBookID INT NOT NULL, doDate DATE NOT NULL, doOrderTime TIMESTAMP NOT NULL, doQuantity INT NOT NULL, doDelivered VARCHAR2(20) NOT NULL, CONSTRAINT TBLDISHORDER_PK PRIMARY KEY (doDishOrderID) )
+CREATE SEQUENCE tblDishOrder_SEQ START WITH 1 INCREMENT by 1
+COMMENT ON TABLE tblDishOrder IS '음식 주문 테이블'
+COMMENT ON COLUMN tblDishOrder.doDishOrderID IS '음식주문 ID 주키'
+COMMENT ON COLUMN tblDishOrder.doDishID IS '음식 ID 외래키'
+COMMENT ON COLUMN tblDishOrder.doBookID IS '예약 객실 ID 외래키'
+COMMENT ON COLUMN tblDishOrder.doDate IS '주문 날짜'
+COMMENT ON COLUMN tblDishOrder.doOrderTime IS '주문 시간'
+COMMENT ON COLUMN tblDishOrder.doQuantity IS '주문 수량'
+COMMENT ON COLUMN tblDishOrder.doDelivered IS '배달 현황'
+ALTER TABLE tblDishOrder ADD CONSTRAINT FK_tblDishOrder_doDishID_tblDi FOREIGN KEY (doDishID) REFERENCES tblDish (dmDishID)
+ALTER TABLE tblDishOrder ADD CONSTRAINT FK_tblDishOrder_doBookID_tblBo FOREIGN KEY (doBookID) REFERENCES tblBookedRoom (brBookID)
+CREATE TABLE tblRepair ( rpIndex INT NOT NULL, rpRoomID INT NOT NULL, rpProduct VARCHAR2(20) NOT NULL, rpDate DATE NOT NULL, rpTime TIMESTAMP NOT NULL, rpRepaired VARCHAR2(1) NOT NULL, rpPrice INT NULL, rpName VARCHAR2(20) NULL, rpPhone VARCHAR2(20) NULL, rpEmail VARCHAR2(20) NULL, rpDescription VARCHAR2(200) NOT NULL, CONSTRAINT TBLREPAIR_PK PRIMARY KEY (rpIndex) )
+CREATE SEQUENCE tblRepair_SEQ START WITH 1 INCREMENT by 1
+COMMENT ON TABLE tblRepair IS '수리 내역 테이블'
+COMMENT ON COLUMN tblRepair.rpIndex IS '수리 내역 ID'
+COMMENT ON COLUMN tblRepair.rpRoomID IS '해당 객실 ID'
+COMMENT ON COLUMN tblRepair.rpProduct IS '수리물품'
+COMMENT ON COLUMN tblRepair.rpDate IS '요청날짜'
+COMMENT ON COLUMN tblRepair.rpTime IS '요청시간'
+COMMENT ON COLUMN tblRepair.rpRepaired IS '수리여부'
+COMMENT ON COLUMN tblRepair.rpPrice IS '비용'
+COMMENT ON COLUMN tblRepair.rpName IS '수리기사 이름'
+COMMENT ON COLUMN tblRepair.rpPhone IS '수리기사 연락처'
+COMMENT ON COLUMN tblRepair.rpEmail IS '수리기사 이메일'
+COMMENT ON COLUMN tblRepair.rpDescription IS '상세 설명'
+ALTER TABLE tblRepair ADD CONSTRAINT FK_tblRepair_rpRoomID_tblRoom_ FOREIGN KEY (rpRoomID) REFERENCES tblRoom (rRoomID)
+CREATE TABLE tblReceipt ( rcReceiptID INT NOT NULL, rcCustomerID INT NOT NULL, rcDate DATE NOT NULL, rcTime TIMESTAMP NOT NULL, rcStatement VARCHAR2(200) NOT NULL, rcPrice INT NOT NULL, CONSTRAINT TBLRECEIPT_PK PRIMARY KEY (rcReceiptID) )
+CREATE SEQUENCE tblReceipt_SEQ START WITH 1 INCREMENT by 1
+COMMENT ON TABLE tblReceipt IS '영수증 테이블'
+COMMENT ON COLUMN tblReceipt.rcReceiptID IS '영수증 ID 주키'
+COMMENT ON COLUMN tblReceipt.rcCustomerID IS '고객 ID 외래키'
+COMMENT ON COLUMN tblReceipt.rcDate IS '날짜'
+COMMENT ON COLUMN tblReceipt.rcTime IS '시간'
+COMMENT ON COLUMN tblReceipt.rcStatement IS '내역'
+COMMENT ON COLUMN tblReceipt.rcPrice IS '금액'
+ALTER TABLE tblReceipt ADD CONSTRAINT FK_tblReceipt_rcCustomerID_tbl FOREIGN KEY (rcCustomerID) REFERENCES tblCustomer (cCustomerID)
+CREATE TABLE tblCleanedRoom ( crRoomID INT NOT NULL, crHotelID VARCHAR2(200) NOT NULL, crCleaned VARCHAR2(1) NOT NULL, CONSTRAINT TBLCLEANEDROOM_PK PRIMARY KEY (crRoomID) )
+COMMENT ON TABLE tblCleanedRoom IS '방청소상태 테이블'
+COMMENT ON COLUMN tblCleanedRoom.crRoomID IS '객실 ID 주키'
+COMMENT ON COLUMN tblCleanedRoom.crHotelID IS '호텔 ID 외래키'
+COMMENT ON COLUMN tblCleanedRoom.crCleaned IS '청소 상태'
+ALTER TABLE tblCleanedRoom ADD CONSTRAINT FK_tblCleanedRoom_crRoomID_tbl FOREIGN KEY (crRoomID) REFERENCES tblRoom (rRoomID)
+CREATE TABLE tblRcFixture ( rcfIndexID INT NOT NULL, rcfFixtureID INT NOT NULL, rcfName VARCHAR2(200) NOT NULL, rcfQuantity INT NOT NULL, rcfDate DATE NOT NULL, rcfPhone VARCHAR2(200) NOT NULL, CONSTRAINT TBLRCFIXTURE_PK PRIMARY KEY (rcfIndexID) )
+CREATE SEQUENCE tblRcFixture_SEQ START WITH 1 INCREMENT by 1
+COMMENT ON TABLE tblRcFixture IS '비품입고 테이블'
+COMMENT ON COLUMN tblRcFixture.rcfIndexID IS '내역 번호 ID'
+COMMENT ON COLUMN tblRcFixture.rcfFixtureID IS '비품 ID'
+COMMENT ON COLUMN tblRcFixture.rcfName IS '비품 이름'
+COMMENT ON COLUMN tblRcFixture.rcfQuantity IS '입고 수량'
+COMMENT ON COLUMN tblRcFixture.rcfDate IS '입고 날짜'
+COMMENT ON COLUMN tblRcFixture.rcfPhone IS '비품업체 연락처'
+ALTER TABLE tblRcFixture ADD CONSTRAINT FK_tblRcFixture_rcfFixtureID_t FOREIGN KEY (rcfFixtureID) REFERENCES tblFixture (fFixtureID)
+CREATE TABLE tblMileage ( mCustomerID INT NOT NULL, mMileage INT NOT NULL, CONSTRAINT TBLMILEAGE_PK PRIMARY KEY (mCustomerID) )
+COMMENT ON TABLE tblMileage IS '마일리지 테이블'
+COMMENT ON COLUMN tblMileage.mCustomerID IS '고객 ID'
+COMMENT ON COLUMN tblMileage.mMileage IS '마일리지'
+ALTER TABLE tblMileage ADD CONSTRAINT FK_tblMileage_mCustomerID_tblC FOREIGN KEY (mCustomerID) REFERENCES tblCustomer (cCustomerID)

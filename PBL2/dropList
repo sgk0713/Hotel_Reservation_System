@@ -1,0 +1,21 @@
+drop table tblbookedroom cascade CONSTRAINTS
+drop table tblcleanedroom cascade CONSTRAINTS
+drop table tblcustomer cascade CONSTRAINTS
+drop table tbldish cascade CONSTRAINTS
+drop table tbldishorder cascade CONSTRAINTS
+drop table tblemployee cascade CONSTRAINTS
+drop table tblrcfixture cascade CONSTRAINTS
+drop table tblreceipt cascade CONSTRAINTS
+drop table tblrepair cascade CONSTRAINTS
+drop table tblroom cascade CONSTRAINTS
+drop table tblfixture cascade CONSTRAINTS
+drop table tblhotel cascade CONSTRAINTS
+drop table tblmileage cascade CONSTRAINTS
+drop SEQUENCE tblRoom_SEQ
+drop SEQUENCE tblCustomer_SEQ
+drop SEQUENCE tblEmployee_SEQ
+drop SEQUENCE tblBookedRoom_SEQ
+drop SEQUENCE tblDishOrder_SEQ
+drop SEQUENCE tblRepair_SEQ
+drop SEQUENCE tblReceipt_SEQ
+drop SEQUENCE tblRcFixture_SEQ

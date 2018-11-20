@@ -1,0 +1,1 @@
+INSERT INTO tblHotel (hHotelID, hName, hAddress, hEmail, hPhone, hRank, hWeb) VALUES (200, 'PBL2_A2', '한양대ERICA 제1공학관 504호', 'sgk0713@gmail.com', '010-0000-0000', 5, 'www.2joSulNongTang.com')
