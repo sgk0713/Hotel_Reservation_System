@@ -1,18 +1,16 @@
 package pbl2;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class Main {
 
 	public static void main(String[] args) {
 		/*
 		 * READ ME!! Before start
 		 * CHECK id, password, and port number of database
-		 * IN DbConnection Class
+		 * In SqlHelper Class
 		 */
 		
-		new CreateTable();
+		new CreateTable();//this method drops and puts all data on your database; make this as comment if you don't want to
+		
 //		LogWriteHelper em = new LogWriteHelper("insertList_tblEmployee");
 //		em.append("INSERT INTO tblEmployee (eEmployId, eHotelId, eName, eDepartment, eGender, eDateEnter, ePosition, eSalary) VALUES ()");
 		

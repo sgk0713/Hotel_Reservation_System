@@ -46,7 +46,7 @@ public class CreateTable {
 			while(line != null) {
 				System.out.print(fileName + " #"+count+"]");
 				if(!sql.insertValue(line)) {
-					tmp[tmpcount] = count +"번째 쿼리:: " + line;
+					tmp[tmpcount] = "Query #" + count +" :: " + line;
 					tmpcount++;
 				}
 				line = reader.readLine();
@@ -109,7 +109,7 @@ public class CreateTable {
 			while(line != null) {
 				System.out.print(count+"]");
 				if(!sql.createTable(line)) {
-					tmp[tmpcount] = count +"번째 쿼리:: " + line;
+					tmp[tmpcount] = "Query #" + count +" :: " + line;
 					tmpcount++;
 				}
 				line = reader.readLine();

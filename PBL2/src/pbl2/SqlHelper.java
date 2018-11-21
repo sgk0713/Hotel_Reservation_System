@@ -10,14 +10,14 @@ public class SqlHelper {
 
 	private Connection conn;
 	
-	//JDBC를 사용하기 위한 변수 선언.
+	//Variables for JDBC
 	private final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
 	private final String IP_ADDRESS = "127.0.0.1";
-	private final String PORT = "59161"; //오라클 포트번호는 1521 이지만 맥에서 docker 사용으로 포트우회
+	private final String PORT = "59161"; //general port number is 1521.
 	private final String DB_URL = "jdbc:oracle:thin:@"+IP_ADDRESS+":"+PORT+":xe";
-	//DB 접속 아이디, 비밀번호.
-	private String user = "system"; //아이디
-	private String pass = "oracle"; //비밀번호
+	//DB user, password
+	private String user = "system"; //user
+	private String pass = "oracle"; //password
 	private Statement stmt;
 	
 	
