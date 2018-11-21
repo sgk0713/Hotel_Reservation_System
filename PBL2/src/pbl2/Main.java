@@ -13,6 +13,8 @@ public class Main {
 		 */
 		
 		new CreateTable();
+//		LogWriteHelper em = new LogWriteHelper("insertList_tblEmployee");
+//		em.append("INSERT INTO tblEmployee (eEmployId, eHotelId, eName, eDepartment, eGender, eDateEnter, ePosition, eSalary) VALUES ()");
 		
 		/*
 		  EXAMPLE!!
