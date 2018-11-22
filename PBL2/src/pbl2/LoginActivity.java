@@ -1,13 +1,9 @@
 package pbl2;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -69,6 +65,7 @@ public class LoginActivity implements ActionListener, KeyListener{
 	    jf.setVisible(true);
 	}
 
+	//actionListener Interface
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
@@ -85,7 +82,10 @@ public class LoginActivity implements ActionListener, KeyListener{
 			new MainActivity(auth);
 		}
 	}
+	//actionListener Interface END
 
+	
+	//KeyListener Interface
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}
@@ -105,6 +105,7 @@ public class LoginActivity implements ActionListener, KeyListener{
 			loginBtn.doClick();
 		}
 	}
+	//KeyListener Interface END
 	
 
 

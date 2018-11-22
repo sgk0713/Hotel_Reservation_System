@@ -2,11 +2,9 @@ package pbl2;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.MenuBar;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.BevelBorder;
 
-public class MainActivity implements ActionListener {
+public class MainActivity implements ActionListener{
 	private String auth;
 	private JFrame jf;
 	private JMenuBar menuBar;
@@ -26,16 +24,11 @@ public class MainActivity implements ActionListener {
 	private JPanel firstPan, secondPan, thirdPan, fourthPan, fifthPan;
 	private JTabbedPane jtp;
 	private double width, height;
-	
-	
 
 	public MainActivity(String auth) {
-		
 		this.auth = auth;
 		mainActivity();
 	}
-	
-	
 
 	private void mainActivity() {
 		jf = new JFrame();
@@ -48,8 +41,11 @@ public class MainActivity implements ActionListener {
 		jf.setTitle("2 Jo SulNong-Tang");
 		
 		jtp = new JTabbedPane();
+		jtp.setBounds(0, 0, (int)width, (int)height);
+		
 		makeMenu();
 		makePanWithAuth(auth);
+		
 		jf.add(jtp);
 		jf.setLocationRelativeTo(null);// make the frame as center
 		jf.setVisible(true);
@@ -63,6 +59,7 @@ public class MainActivity implements ActionListener {
 			new LoginActivity();
 		}
 	}
+	
 	private void makeMenu() {
 		menuBar = new JMenuBar();
 		menuBar.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
@@ -75,6 +72,7 @@ public class MainActivity implements ActionListener {
 		
 		menuBar.add(menu);
 	}
+	
 	private void makePanWithAuth(String auth) {
 		if(auth.equals("cus")) {
 			makeSecondPan();
@@ -82,7 +80,7 @@ public class MainActivity implements ActionListener {
 			makeFirstPan();
 			makeSecondPan();
 			makeFourthPan();
-			makeFifthPan();
+			makeFifthPan();			
 		}else{//adm
 			makeFirstPan();
 			makeSecondPan();
@@ -95,7 +93,6 @@ public class MainActivity implements ActionListener {
 	private void makeFirstPan() {
 		firstPan = new JPanel();
 		jtp.addTab("객실", null, firstPan, "현재 객실의 상태를 보여줍니다");
-		
 		JPanel listPan = new JPanel();
 		JLabel listLabel = new JLabel("체크인 / 체크아웃 리스트");
 		firstPan.setLayout(null);
@@ -121,7 +118,6 @@ public class MainActivity implements ActionListener {
 			firstPan.add(t[i-1]);
 			temp += 0.05;
 		}
-		
 		
 	}
 
