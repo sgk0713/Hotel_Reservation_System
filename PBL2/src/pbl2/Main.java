@@ -1,7 +1,7 @@
 package pbl2;
 
 public class Main {
-
+	static SqlHelper sql;
 	public static void main(String[] args) {
 		/*
 		 * READ ME!! Before start
@@ -9,8 +9,9 @@ public class Main {
 		 * In SqlHelper Class
 		 */
 		
-		new CreateTable();//this method drops and puts all data on your database; make this as comment if you don't want to
-		
+//		new CreateTable();//this method drops and puts all data on your database; make this as comment if you don't want to
+		new LoginActivity();
+//		new MainActivity("adm");
 //		LogWriteHelper em = new LogWriteHelper("insertList_tblEmployee");
 //		em.append("INSERT INTO tblEmployee (eEmployId, eHotelId, eName, eDepartment, eGender, eDateEnter, ePosition, eSalary) VALUES ()");
 		
