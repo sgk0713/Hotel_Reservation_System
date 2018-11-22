@@ -25,8 +25,7 @@ public class SqlHelper {
 		try {
             Class.forName(JDBC_DRIVER);
         } catch(Exception e) {
-            e.printStackTrace();
-            System.out.println("SQLException : " + e);
+        	System.out.println("SqlHelper() ERROR :\n\tL " + e.getMessage());
         }
 	}
 	
@@ -39,10 +38,10 @@ public class SqlHelper {
 		}catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("    (X)  DATABASE    CONNECTION FAILED... (X)");
-			System.out.println("SQLExceptoin: " + e);
+			System.out.println("SqlHelper.open() SQL ERROR :\n\tL " + e.getMessage());
 			return false;
 		}catch (Exception e) {
-			System.out.println("Exception: " + e);
+			System.out.println("SqlHelper.open() ERROR :\n\tL " + e.getMessage());
 			return false;
 		}
 	}
@@ -59,10 +58,10 @@ public class SqlHelper {
 		}catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("    (X)  DATABASE    CONNECTION FAILED... (X)");
-			System.out.println("SQLExceptoin: " + e);
+			System.out.println("SqlHelper.open(user, pass) SQL ERROR :\n\tL " + e.getMessage());
 			return false;
 		}catch (Exception e) {
-			System.out.println("Exception: " + e);
+			System.out.println("SqlHelper.open(user, pass) ERROR :\n\tL " + e.getMessage());
 			return false;
 		}
 	}
@@ -78,7 +77,7 @@ public class SqlHelper {
 			System.out.println(" (==/==) DATABASE DISCONNECTION SUCCEED!! (==/==)");
 			return true;
         } catch (SQLException e) {
-            System.out.println("Exception: " + e);
+        	System.out.println("SqlHelper.close() ERROR :\n\tL " + e.getMessage());
             return false;
         }
 	}
@@ -92,10 +91,42 @@ public class SqlHelper {
 			}else {
 				System.out.println("USE open() method first...");
 			}
-		} catch (SQLException e) {		
+		} catch (SQLException e) {
+			System.out.println("SqlHelper.query() ERROR :\n\tL " + e.getMessage());
 			return null;
 		}
 		return rs;
+	}
+	
+	public int getColumnNumber(String tableName) {
+		try {
+			String query = "select count(column_name) from cols where table_name = '" + tableName.toUpperCase() + "'";
+			ResultSet rs = query(query);
+			rs.next();
+			int count = rs.getInt(1);
+			return count;
+		} catch (SQLException e) {
+			System.out.println("SqlHelper.getColumnNumber() ERROR :\n\tL " + e.getMessage());
+			return 0;
+		}	
+	}
+	
+	public String[] getColumnName(String tableName) {
+		try {
+			String query = "select column_name from cols where table_name = '" + tableName.toUpperCase() + "'";
+			int num = getColumnNumber(tableName);
+			if(num == 0)
+				return null;
+			String[] tables = new String[num];
+			ResultSet rs = query(query);
+			for(int i = 0; rs.next(); i++) {
+				tables[i] = rs.getString(1);
+			}
+			return tables;
+		}catch (SQLException e) {
+			System.out.println("SqlHelper.getColumnName() ERROR :\n\tL " + e.getMessage());
+			return null;
+		}
 	}
 	
 	public boolean createTable(String sql) {
@@ -110,7 +141,8 @@ public class SqlHelper {
 				return false;
 			}
 		}catch (Exception e) {
-			System.out.println("Exception : " + e);
+			System.out.println("SqlHelper.createTable() ERROR :\n\tL " + e.getMessage());
+			
 		}
 		return false;
 	}
@@ -126,7 +158,7 @@ public class SqlHelper {
 				return false;
 			}
 		}catch (Exception e) {
-			System.out.println("Exception : " + e);
+			System.out.println("SqlHelper.dropTable() ERROR :\n\tL " + e.getMessage());
 			return false;
 		}
 	}
@@ -143,7 +175,7 @@ public class SqlHelper {
 				return false;
 			}
 		}catch (Exception e) {
-			System.out.println("Exception : " + e);
+			System.out.println("SqlHelper.insertVale() ERROR :\n\tL " + e.getMessage());
 		}
 		return false;
 	}
@@ -155,8 +187,8 @@ public class SqlHelper {
 			System.out.println("     (O) COMMIT SUCCEED!! (O)");
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
 			System.out.println("     (X) COMMIT FAILED... (X)");
+			System.out.println("SqlHelper.commit() ERROR :\n\tL " + e.getMessage());
 			return false;
 		}
 	}
@@ -171,6 +203,7 @@ public class SqlHelper {
 			}
 		}catch (Exception e) {
 			System.out.println("isExist() fail");
+			System.out.println("SqlHelper.isExist() ERROR :\n\tL " + e.getMessage());
 		}
 		return false;
 	}
