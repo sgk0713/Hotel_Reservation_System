@@ -1,4 +1,4 @@
-package pbl2.DTO;
+package pbl2.dto;
 
 import java.sql.Time;
 import java.sql.Date;

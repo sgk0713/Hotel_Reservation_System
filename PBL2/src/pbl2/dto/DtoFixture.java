@@ -1,4 +1,4 @@
-package pbl2.DTO;
+package pbl2.dto;
 
 public class DtoFixture {
 	private int fixtureId;

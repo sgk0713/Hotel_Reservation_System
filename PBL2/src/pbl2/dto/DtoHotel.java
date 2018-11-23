@@ -1,4 +1,4 @@
-package pbl2.DTO;
+package pbl2.dto;
 
 public class DtoHotel {
 	private int hotelId;
