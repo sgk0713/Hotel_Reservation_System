@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,6 +16,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.BevelBorder;
+
+import pbl2.controller.ViewEmployee;
 
 public class MainActivity implements ActionListener{
 	private String auth;
@@ -35,13 +39,15 @@ public class MainActivity implements ActionListener{
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		width = screenSize.getWidth() * 0.8;
 		height = width * 0.6;
-		jf.setSize((int) width, (int) height);		
-		height-=90;//remove tab size;
+		jf.setSize((int) width, (int) height);	
+		System.out.println("height : "+ (int)height + ", jf.getHeight() : " + jf.getHeight());
+		height -= 90;//remove tab size;
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setTitle("2 Jo SulNong-Tang");
 		
 		jtp = new JTabbedPane();
 		jtp.setBounds(0, 0, (int)width, (int)height);
+		System.out.println("jtp.width : "+ jtp.getWidth()+"jtp.height : "+ jtp.getHeight());
 		
 		makeMenu();
 		makePanWithAuth(auth);
@@ -94,13 +100,13 @@ public class MainActivity implements ActionListener{
 		firstPan = new JPanel();
 		jtp.addTab("객실", null, firstPan, "현재 객실의 상태를 보여줍니다");
 		JPanel listPan = new JPanel();
-		JLabel listLabel = new JLabel("체크인 / 체크아웃 리스트");
+		JLabel listLabel = new JLabel("<html>x:"+jtp.getX()+"<br> y:"+jtp.getY()+"</html>");
 		firstPan.setLayout(null);
 		System.out.println((int)jf.getHeight());
 		System.out.println(height);
-		listPan.setBounds(0, 0, (int)(jf.getWidth()*0.05), (int)height);
-		System.out.println("height!#!@#!" + (int)height);
+		listPan.setBounds(0, 0, (int)(jtp.getWidth()*0.05), jtp.getHeight());
 		listPan.add(listLabel);
+		listLabel.setForeground(Color.white);
 		listPan.setBackground(Color.BLACK);
 		firstPan.add(listPan);
 		
@@ -109,10 +115,10 @@ public class MainActivity implements ActionListener{
 		double temp = 0.05;
 		for(int i = 1; i < 10; i++) {
 			p[i-1] = new JLabel();
-			p[i-1].setText("<html>"+(i-1)+"<br>"+(int)height+"-"+i+"*10"+"<br>="+(int)(height-i*10)+"</html>");
+			p[i-1].setText("<html>"+(i-1)+"<br>"+(int)jtp.getHeight()+"-"+i+"*10"+"<br>="+(int)(jtp.getHeight()-i*10)+"</html>");
 			p[i-1].setForeground(Color.WHITE);
 			t[i-1] = new JPanel();
-			t[i-1].setBounds((int)(Math.floor(jf.getWidth()*temp)), 0, (int)(jf.getWidth()*0.05), (int)(height-i*10));
+			t[i-1].setBounds((int)(Math.floor(jtp.getWidth()*temp)), 0, (int)(jtp.getWidth()*0.05), (int)(jtp.getHeight()-i*10));
 			t[i-1].add(p[i-1]);
 			t[i-1].setBackground(Color.black);
 			firstPan.add(t[i-1]);
@@ -127,7 +133,8 @@ public class MainActivity implements ActionListener{
 	}
 
 	private void makeThirdPan() {
-		thirdPan = new JPanel();
+		thirdPan = new ViewEmployee(new ArrayList<>(), jtp.getWidth(), jtp.getHeight()).getPanel();
+		
 		jtp.addTab("직원", null, thirdPan, "직원관리창으로 이동합니다");
 	}
 
