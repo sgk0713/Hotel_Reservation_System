@@ -4,12 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -28,7 +30,7 @@ public class ViewEmployee implements ActionListener{
 		if(e.getSource() == searchBtn) {
 			
 		}else if(e.getSource() == addBtn) {
-			addData(new DtoEmployee(1, 1, "aa", "인사", "남", new Date(20200), "대리", 10220));
+			addData();
 			updateTableView();
 		}else if(e.getSource() == departCombo) {
 			if(departCombo.getSelectedItem().equals("직접 입력")){
@@ -131,7 +133,7 @@ public class ViewEmployee implements ActionListener{
 		
 		positionField = new JLabel("직급 : ");
 		posiCombo = new JComboBox<>();
-		posiCombo.addItem("하우스키퍼 매니저ㅁ;ㅣㄹㄴㅇㅁㄴㅇㄹㅁㅇㄹㅁㅇㄹ;");
+		posiCombo.addItem("하우스키퍼 매니저ㅁ;ㅣㄹㄴㅇㅁㄴㅇㄹㅁㅇㄹㅁㅇㄹ");
 		posiCombo.addItem("하우스키퍼 매니저");
 		posiCombo.addItem("하우스키퍼");
 		posiCombo.addItem("직접 입력");		
@@ -215,16 +217,71 @@ public class ViewEmployee implements ActionListener{
 		model.removeRow(idx);
 		updateTableView();
 	}
-	public void addData(DtoEmployee dto) {
-		String[] data = new String[6];
-		data[0] = dto.getName();
-		data[1] = dto.getGender();
-		data[2] = dto.getDepartment();
-		data[3] = dto.getPosition();
-		data[4] = String.valueOf(dto.getDateEnter());
-		data[5] = String.valueOf(dto.getSalary());
-		model.addRow(data);
+	
+	public void addData() {
+		new DtoEmployee(1, 1, "aa", "인사", "남", new Date(20200), "대리", 10220);
+		int id = list.size()+1;
+		int hotelId = 200;
+		String name = nameInput.getText();
+		String depart = null;
+		if(departCombo.getSelectedItem() == "직접 입력") {
+			if(!departInput.getText().isEmpty())
+				depart = departInput.getText();
+		}else {
+			depart = departCombo.getSelectedItem().toString();
+		}
+		String gender = null;
+		if(maleRadio.isSelected()) {
+			gender = maleRadio.getText();
+		}else if(femaleRadio.isSelected()) {
+			gender = femaleRadio.getText();
+		}
+		Date date = null;
+		if(!dateInput.getText().isEmpty()) {
+			//
+		}else {
+			date = new Date(new java.util.Date().getTime());			
+		}
+		String position = null;
+		if(posiCombo.getSelectedItem() == "직접 입력") {
+			if(!posiInput.getText().isEmpty())
+				position = posiInput.getText();
+		}else {
+			position = posiCombo.getSelectedItem().toString();
+		}
+		int salary=-1;
+		if(!salaryInput.getText().isEmpty()) {
+			salary = Integer.parseInt(salaryInput.getText());
+		}
+		if(name == null || depart == null || gender == null || date == null || position == null || salary == -1) {
+			System.out.println(name);
+			System.out.println(depart);
+			System.out.println(gender);
+			System.out.println(date);
+			System.out.println(position);
+			System.out.println(salary);
+			JOptionPane.showMessageDialog(null, "빈칸을 채워주세요.","확인", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		
+		System.out.println("name:" + name);
+		System.out.println("depart : " + depart);
+		System.out.println("gender : " + gender);
+		System.out.println("date : " + date);
+		System.out.println("position : " + position);
+		System.out.println("salary : " + salary);
+		return;
+//		DtoEmployee dto = new DtoEmployee(id, hotelId, name, depart, gender, date, position, salary);
+//		String[] data = new String[6];
+//		data[0] = dto.getName();
+//		data[1] = dto.getGender();
+//		data[2] = dto.getDepartment();
+//		data[3] = dto.getPosition();
+//		data[4] = String.valueOf(dto.getDateEnter());
+//		data[5] = String.valueOf(dto.getSalary());
+//		model.addRow(data);
 	}
+	
 	public void updateTableView() {
 		table.setModel(model);
 	}

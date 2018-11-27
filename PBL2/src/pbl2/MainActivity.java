@@ -98,7 +98,7 @@ public class MainActivity implements ActionListener{
 
 	private void makeFirstPan() {
 		firstPan = new JPanel();
-		jtp.addTab("객실", null, firstPan, "현재 객실의 상태를 보여줍니다");
+		jtp.addTab("객실", null, firstPan, "현재 객실의 상태를 보여줍니다.");
 		JPanel listPan = new JPanel();
 		JLabel listLabel = new JLabel("<html>x:"+jtp.getX()+"<br> y:"+jtp.getY()+"</html>");
 		firstPan.setLayout(null);
@@ -129,23 +129,23 @@ public class MainActivity implements ActionListener{
 
 	private void makeSecondPan() {
 		secondPan = new JPanel();
-		jtp.addTab("예약", null, secondPan, "캘린더창으로 이동합니다");
+		jtp.addTab("예약", null, secondPan, "캘린더창으로 이동합니다.");
 	}
 
 	private void makeThirdPan() {
 		thirdPan = new ViewEmployee(new ArrayList<>(), jtp.getWidth(), jtp.getHeight()).getPanel();
 		
-		jtp.addTab("직원", null, thirdPan, "직원관리창으로 이동합니다");
+		jtp.addTab("직원", null, thirdPan, "직원관리창으로 이동합니다.");
 	}
 
 	private void makeFourthPan() {
 		fourthPan = new JPanel();
-		jtp.addTab("룸서비스", null, fourthPan, "룸서비스창으로 이동합니다");
+		jtp.addTab("룸서비스", null, fourthPan, "룸서비스창으로 이동합니다.");
 	}
 
 	private void makeFifthPan() {
 		fifthPan = new JPanel();
-		jtp.addTab("하우스키퍼", null, fifthPan, "하우스키퍼창으로 이동합니다");
+		jtp.addTab("하우스키퍼", null, fifthPan, "하우스키퍼창으로 이동합니다.");
 	}
 	
 }
