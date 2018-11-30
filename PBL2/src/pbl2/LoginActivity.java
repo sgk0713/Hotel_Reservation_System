@@ -79,6 +79,7 @@ public class LoginActivity implements ActionListener, KeyListener{
 			}else if(adm.equals(idInput.getText()) && pass.equals(String.valueOf(passInput.getPassword()))) {
 				auth = "adm";
 			}
+			jf.setVisible(false);
 			new MainActivity(auth);
 		}
 	}
