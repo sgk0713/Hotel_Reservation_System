@@ -11,8 +11,10 @@ public class DtoBookedRoom {
 	private int adult;
 	private int children;
 	private int hkId;
+	private String state;
+	
 	public DtoBookedRoom(int bookId, int roomId, int customerId, Date dateEnter, Date dateExit, int adult, int children,
-			int hkId) {
+			int hkId, String state) {
 		super();
 		this.bookId = bookId;
 		this.roomId = roomId;
@@ -22,6 +24,7 @@ public class DtoBookedRoom {
 		this.adult = adult;
 		this.children = children;
 		this.hkId = hkId;
+		this.state = state;
 	}
 	public int getBookId() {
 		return bookId;
@@ -70,5 +73,11 @@ public class DtoBookedRoom {
 	}
 	public void setHkId(int hkId) {
 		this.hkId = hkId;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
 	}
 }
