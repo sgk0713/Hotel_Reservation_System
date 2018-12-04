@@ -12,6 +12,18 @@ public class DtoEmployee {
 	private int salary;
 	private String state;
 	public DtoEmployee(int employeeId, int hotelId, String name, String department, String gender, Date dateEnter,
+			String position, int salary) {
+		super();
+		this.employeeId = employeeId;
+		this.hotelId = hotelId;
+		this.name = name;
+		this.department = department;
+		this.gender = gender;
+		this.dateEnter = dateEnter;
+		this.position = position;
+		this.salary = salary;
+	}
+	public DtoEmployee(int employeeId, int hotelId, String name, String department, String gender, Date dateEnter,
 			String position, int salary, String state) {
 		super();
 		this.employeeId = employeeId;
