@@ -469,23 +469,32 @@ public class ViewEmployee implements ActionListener{
 		}else {
 			if(!searchInput.getText().isEmpty()) {
 				name = searchInput.getText();
-				if(searchMaleRadio.isSelected()) {
-					gender = maleRadio.getText();
-				}else if(searchFemaleRadio.isSelected()) {
-					gender = femaleRadio.getText();
-				}else {
-					gender = null;
-				}
-				DtoEmployee tempDto = null;
-				for(int i = 0; i < list.size(); i++) {
-					tempDto = list.get(i);
-					if(gender == null && tempDto.getName().equals(name)) {
+			}
+			if(searchMaleRadio.isSelected()) {
+				gender = maleRadio.getText();
+			}else if(searchFemaleRadio.isSelected()) {
+				gender = femaleRadio.getText();
+			}else {
+				gender = null;
+			}
+			DtoEmployee tempDto = null;
+			for(int i = 0; i < list.size(); i++) {
+				tempDto = list.get(i);
+				if(name == null) {
+					if(gender == null) {
 						currList.add(tempDto);
-					}else if(tempDto.getName().equals(name) && tempDto.getGender().equals(gender)) {
+					}else if(tempDto.getGender().equals(gender)) {
+						currList.add(tempDto);
+					}
+				}else if(tempDto.getName().equals(name)) {
+					if(gender == null) {
+						currList.add(tempDto);
+					}else if(tempDto.getGender().equals(gender)) {
 						currList.add(tempDto);
 					}
 				}
 			}
+		
 		}
 		updateTableView();
 	}

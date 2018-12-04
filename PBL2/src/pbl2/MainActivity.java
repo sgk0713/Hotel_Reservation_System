@@ -18,6 +18,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.BevelBorder;
 
 import pbl2.controller.ViewEmployee;
+import pbl2.controller.ViewReservation;
 
 public class MainActivity implements ActionListener{
 	private String auth;
@@ -128,13 +129,12 @@ public class MainActivity implements ActionListener{
 	}
 
 	private void makeSecondPan() {
-		secondPan = new JPanel();
+		secondPan = new ViewReservation(new ArrayList<>(), jtp.getWidth(), jtp.getHeight()).getPanel();
 		jtp.addTab("예약", null, secondPan, "캘린더창으로 이동합니다.");
 	}
 
 	private void makeThirdPan() {
 		thirdPan = new ViewEmployee(new ArrayList<>(), jtp.getWidth(), jtp.getHeight()).getPanel();
-		
 		jtp.addTab("직원", null, thirdPan, "직원관리창으로 이동합니다.");
 	}
 

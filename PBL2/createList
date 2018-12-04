@@ -55,7 +55,7 @@ COMMENT ON COLUMN tblDish.dmDishID IS '음식 ID 주키'
 COMMENT ON COLUMN tblDish.dmName IS '음식 이름'
 COMMENT ON COLUMN tblDish.dmPrice IS '음식 가격'
 COMMENT ON COLUMN tblDish.dmImage IS '음식 사진'
-CREATE TABLE tblBookedRoom( brBookID INT NOT NULL, brRoomID INT NOT NULL, brCustomerID INT NOT NULL, brDateEnter DATE NOT NULL, brDateExit DATE NOT NULL, brAdult INT NOT NULL, brChildren INT NOT NULL, brHkID INT NOT NULL, CONSTRAINT TBLBOOKEDROOM_PK PRIMARY KEY (brBookID))
+CREATE TABLE tblBookedRoom( brBookID INT NOT NULL, brRoomID INT NOT NULL, brCustomerID INT NOT NULL, brDateEnter DATE NOT NULL, brDateExit DATE NOT NULL, brAdult INT NOT NULL, brChildren INT NOT NULL, brHkID INT NOT NULL, brState VARCHAR2(20) NULL, CONSTRAINT TBLBOOKEDROOM_PK PRIMARY KEY (brBookID))
 CREATE SEQUENCE tblBookedRoom_SEQ START WITH 1 INCREMENT BY 1
 COMMENT ON TABLE tblBookedRoom IS '예약된 룸 테이블'
 COMMENT ON COLUMN tblBookedRoom.brBookID IS '예약 ID 주키'
@@ -65,6 +65,7 @@ COMMENT ON COLUMN tblBookedRoom.brDateEnter IS '입실 날짜'
 COMMENT ON COLUMN tblBookedRoom.brDateExit IS '퇴실 날짜'
 COMMENT ON COLUMN tblBookedRoom.brAdult IS '성인인원'
 COMMENT ON COLUMN tblBookedRoom.brChildren IS '어린이인원'
+COMMENT ON COLUMN tblBookedRoom.brState IS '체크인아웃상태'
 COMMENT ON COLUMN tblBookedRoom.brHkID IS '담당 하우스키퍼 ID'
 ALTER TABLE tblBookedRoom ADD CONSTRAINT FK_tblBookedRoom_brRoomID_tblR FOREIGN KEY (brRoomID) REFERENCES tblRoom (rRoomID)
 ALTER TABLE tblBookedRoom ADD CONSTRAINT FK_tblBookedRoom_brCustomerID_ FOREIGN KEY (brCustomerID) REFERENCES tblCustomer (cCustomerID)
