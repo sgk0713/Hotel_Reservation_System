@@ -1,16 +1,26 @@
 package pbl2.controller;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -18,12 +28,12 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
-import pbl2.MainActivity;
-import pbl2.dto.DtoCustomer;
+
 import pbl2.dto.DtoEmployee;
 
 public class ViewEmployee implements ActionListener{
@@ -95,6 +105,9 @@ public class ViewEmployee implements ActionListener{
 	private JComboBox<String> departCombo, posiCombo;
 	private JButton searchBtn, addBtn;
 	private JScrollPane scroll;
+	private ModifyDialog md;
+	private String[] departList = {"FrontOffice", "Restaurant", "HumanResource", "RoomManagement", "직접 입력"};
+	private String[] posiList = {"Manager", "HouseKeeper", "Cashier", "Clerk", "직접 입력"};
 	
 	public ViewEmployee(ArrayList<DtoEmployee> list, int width, int height) {
 		this.list = list;
@@ -129,12 +142,349 @@ public class ViewEmployee implements ActionListener{
 		makeTableModel();
 		table = new JTable(model);
 		table.setDefaultEditor(Object.class, null);
+		table.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			@Override
+			public void mousePressed(MouseEvent e) {}
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2) {
+					if(table.getSelectedRowCount()==1) {
+						int id = Integer.valueOf((String) table.getModel().getValueAt(table.getSelectedRow(), 0));
+						DtoEmployee temp = null;
+						for(int i =0; i<list.size();i++) {
+							if(list.get(i).getEmployeeId() == id) {
+								temp = list.get(i);
+								break;
+							}
+						}
+						JFrame jf = new JFrame();
+						if(md != null) {
+							md.dispose();
+						}
+						md = new ModifyDialog(jf, "수정", temp);
+						md.setVisible(true);
+					}
+				}
+				
+			}
+		});
 		scroll = new JScrollPane(table);
 		scroll.setBounds(10, searchAreaHeight, width-20, height-searchAreaHeight-20);
 		mainPan.add(regiSearchJtp);
 		mainPan.add(scroll, BorderLayout.CENTER);
 	}
 	
+	class ModifyDialog extends JDialog{
+		JLabel id, name, name2, depart, posi, date, sal, info;
+		JTextField idInput, nameInput, nameInput2, dateInput, salInput, dInput, pInput;
+		JComboBox<String> departC, posiC;
+	    JButton modiButton=new JButton("수정");
+	    JButton cancelButton = new JButton("취소");
+	    JButton cancel2Button = new JButton("취소");
+	    JButton deleteButton = new JButton("삭제");
+	    ModifyDialog(JFrame frame, String title, DtoEmployee dto){
+	        super(frame,title);
+	        this.setLayout(null);
+	        this.setSize(240, 420);
+	        this.setLocationRelativeTo(null);
+	        JTabbedPane tabPan = new JTabbedPane();
+	        tabPan.setBounds(0, 0, this.getWidth(), this.getHeight()-20);
+	        JPanel p1 = new JPanel();
+	        JPanel p2 = new JPanel();
+	        p1.setLayout(null);
+	        p2.setLayout(null);
+	        id   		= new JLabel("ID   :");
+	        name 		= new JLabel("이름  :");
+	        name2 		= new JLabel("이름  :");
+	        depart 		= new JLabel("부서  :");
+	        posi 		= new JLabel("직급  :");
+	        date 		= new JLabel("입사일:");
+	        sal  		= new JLabel("급여  :");
+	        info		= new JLabel("<html><div style='text-align:center'>'ID'와 '이름'을<br/>정확히 기입해주세요.</div></html>");
+	        idInput 	= new JTextField();
+	        nameInput 	= new JTextField();
+	        nameInput2 	= new JTextField();
+	        dInput = new JTextField();
+	        pInput   = new JTextField();
+	        departC = new JComboBox<>();
+	        for(int i = 0 ; i<departList.length;i++) {
+	        	departC.addItem(departList[i]);
+	        }
+	        posiC = new JComboBox<>();
+	        for(int i = 0 ; i<posiList.length;i++) {
+	        	posiC.addItem(posiList[i]);
+	        }
+	        dateInput 	= new JTextField();
+	        salInput 	= new JTextField();
+	        
+	        
+	        int x = tabPan.getWidth()/2 - 90;
+	        int y = 30;
+	        int w = 50;
+	        int inputW = 100;
+	        int h = 20;
+	        int weight = 50;
+	        
+	        id.setBounds(x, y, w, h);
+	        name.setBounds(x, y, w, h);
+	        idInput.setBounds(id.getX()+id.getWidth()+10, y, inputW, h);
+	        nameInput.setBounds(name.getX()+name.getWidth()+10, y, inputW, h);
+	        
+	        depart.setBounds(x, y+=weight, w, h);
+	        name2.setBounds(x, y, w, h);
+	        departC.setBounds(depart.getX()+depart.getWidth()+10, y, inputW, h);
+	        nameInput2.setBounds(name2.getX()+name2.getWidth()+10, y, inputW, h);
+	        departC.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if(e.getSource() == departC) {
+						if(departC.getSelectedItem().equals("직접 입력")){
+							dInput.setVisible(true);
+							dInput.setEnabled(true);
+						}else {
+							dInput.setText(null);
+							dInput.setVisible(false);
+							dInput.setEnabled(false);
+						}
+					}
+				}
+			});
+	        dInput.setBounds(depart.getX()+depart.getWidth()+10, y+25, inputW, h);
+	        dInput.setEnabled(false);
+	        dInput.setVisible(false);
+	        
+	        posi.setBounds(x, y+=weight, w, h);
+	        posiC.setBounds(posi.getX()+posi.getWidth()+10, y, inputW, h);
+	        posiC.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if(e.getSource() == posiC) {
+						if(posiC.getSelectedItem().equals("직접 입력")){
+							pInput.setVisible(true);
+							pInput.setEnabled(true);
+						}else {
+							pInput.setText(null);
+							pInput.setVisible(false);
+							pInput.setEnabled(false);
+						}
+					}
+				}
+			});
+	        pInput.setBounds(posi.getX()+posi.getWidth()+10, y+25, inputW, h);
+	        pInput.setEnabled(false);
+	        pInput.setVisible(false);
+	        
+	        date.setBounds(x, y+=weight, w, h);
+	        info.setBounds(x+30, y, w+inputW, h*3);
+	        dateInput.setBounds(date.getX()+date.getWidth()+10, y, inputW, h);
+	        
+	        sal.setBounds(x, y+=weight, w, h);
+	        salInput.setBounds(sal.getX()+sal.getWidth()+10, y, inputW, h);
+	        
+	        modiButton.setBounds((tabPan.getWidth()-20)/2-(w+inputW)/2, y+=weight, w+inputW, h);
+	        deleteButton.setBounds((tabPan.getWidth()-20)/2-(w+inputW)/2, y, w+inputW, h);
+	        cancelButton.setBounds((tabPan.getWidth()-20)/2-(w+inputW)/2, y+=30, w+inputW, h);
+	        cancel2Button.setBounds((tabPan.getWidth()-20)/2-(w+inputW)/2, y, w+inputW, h);
+	        deleteButton.setEnabled(false);
+	        
+	        nameInput.setText(dto.getName());
+	        departC.setSelectedItem(dto.getDepartment());
+	        posiC.setSelectedItem(dto.getPosition());
+	        dateInput.setText(dto.getDateEnter()+"");
+	        salInput.setText(dto.getSalary()+"");
+	        dateInput.addKeyListener(new KeyListener() {
+				@Override
+				public void keyTyped(KeyEvent e) {
+					char c = e.getKeyChar();
+					int len = dateInput.getText().length();
+					if(len < 10) {
+						if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
+							return;
+						}
+						if(!Character.isDigit(c)) {
+							e.consume();
+							return;
+						}
+						if(len == 4 || len == 7) {
+							dateInput.setText(dateInput.getText() + "-");
+						}
+					}else if(e.getKeyCode() != KeyEvent.VK_BACK_SPACE || e.getKeyCode() != KeyEvent.VK_DELETE) {
+						e.consume();
+						return;
+					}
+				}
+				@Override
+				public void keyReleased(KeyEvent e) {}
+				@Override
+				public void keyPressed(KeyEvent e) {}
+			});
+	        idInput.addKeyListener(new KeyListener() {
+				@Override
+				public void keyTyped(KeyEvent e) {}
+				@Override
+				public void keyReleased(KeyEvent e) {
+					if(idInput.getText().equals(String.valueOf(dto.getEmployeeId())) && nameInput2.getText().equals(dto.getName())) {
+						deleteButton.setEnabled(true);
+					}else {
+						deleteButton.setEnabled(false);
+					}
+				}
+				@Override
+				public void keyPressed(KeyEvent e) {}
+			});
+	        nameInput2.addKeyListener(new KeyListener() {
+				@Override
+				public void keyTyped(KeyEvent e) {}
+				@Override
+				public void keyReleased(KeyEvent e) {
+					if(idInput.getText().equals(String.valueOf(dto.getEmployeeId())) && nameInput2.getText().equals(dto.getName())) {
+						deleteButton.setEnabled(true);
+					}else {
+						deleteButton.setEnabled(false);
+					}
+				}
+				@Override
+				public void keyPressed(KeyEvent e) {}
+			});
+	        modiButton.addActionListener(new ActionListener(){
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	            	if(nameInput.getText().equals(dto.getName()) && departC.getSelectedItem().equals(dto.getDepartment()) 
+	            			&& posiC.getSelectedItem().equals(dto.getPosition()) && dateInput.getText().equals(dto.getDateEnter()+"") 
+	            			&& salInput.getText().equals(dto.getSalary()+"")){
+	            		JOptionPane.showConfirmDialog(null, "수정사항이 없습니다.", "확인", JOptionPane.PLAIN_MESSAGE);
+	            		System.out.println("no change");
+	            		System.out.println();
+	            		dispose();
+	            	}else {
+	            		String tempName = null;
+	            		if(!nameInput.getText().isEmpty()) {
+	            			tempName = nameInput.getText();
+	            		}
+	            		
+	            		String tempDepart = null;
+	            		if(departC.getSelectedItem() == "직접 입력") {
+	            			if(!dInput.getText().isEmpty())
+	            				tempDepart = dInput.getText();
+	            		}else {
+	            			tempDepart = departC.getSelectedItem().toString();
+	            		}
+	            		
+	            		String tempPosi = null;
+	            		if(posiC.getSelectedItem() == "직접 입력") {
+	            			if(!pInput.getText().isEmpty())
+	            				tempPosi = pInput.getText();
+	            		}else {
+	            			tempPosi = posiC.getSelectedItem().toString();
+	            		}
+	            		Date tempDate = null;
+	            		try {
+	            			if(!dateInput.getText().isEmpty() && (Date.valueOf(dateInput.getText()).getTime() <= new Date(new java.util.Date().getTime()).getTime())) {
+	            				tempDate = Date.valueOf(dateInput.getText());
+	            			}
+	            		}catch (Exception e1) {
+	            		}
+	            		int tempSalary=-1;
+	            		if(!salInput.getText().isEmpty()) {
+	            			tempSalary = Integer.parseInt(salInput.getText());
+	            		}
+	            		if(tempName == null || tempDepart == null || tempDate == null || tempPosi == null || tempSalary == -1) {
+	            			JOptionPane.showMessageDialog(null, "입력란을 확인해주세요.","확인", JOptionPane.WARNING_MESSAGE);
+	            			return;
+	            		}else {
+	            			int result = JOptionPane.showConfirmDialog(null, "이름    : " + tempName 
+	            															+"\n부서    : " + tempDepart
+	            															+"\n직급    : " + tempPosi
+	            															+"\n입사일  : " + tempDate
+	            															+"\n급여    : " + tempSalary, "확인", JOptionPane.OK_CANCEL_OPTION);
+	                        if (result == 0) { //OK=0 , Cancel=2 리턴
+	                    		dto.setName(tempName);
+	                    		dto.setDepartment(tempDepart);
+	                    		dto.setPosition(tempPosi);
+	                    		dto.setDateEnter(tempDate);
+	                    		dto.setSalary(tempSalary);
+	                    		for(int i = 0; i < list.size();i++) {
+	    							if(list.get(i).getEmployeeId() == dto.getEmployeeId()) {
+	    								list.set(i, dto);
+	    								break;
+	    							}
+	    						}
+	                    		pbl2.MainActivity.sql.query("UPDATE TBLEMPLOYEE set ENAME = '"+dto.getName()+"', EDEPARTMENT = '"+ dto.getDepartment()
+	                    		+"', EDATEENTER = '" + dto.getDateEnter() + "', EPOSITION = '" + dto.getPosition() +"', ESALARY = " + dto.getSalary() + "where EEMPLOYEEID = " + dto.getEmployeeId());
+	    						pbl2.MainActivity.sql.commit();
+	                    		dispose();
+	                    		searchBtn.doClick();
+	                        }
+	            		}
+	            	}
+	            }
+	        });
+	        
+	        deleteButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int result = JOptionPane.showConfirmDialog(null, "정말 삭제하시겠습니까?", "삭제", JOptionPane.OK_CANCEL_OPTION);
+					if(result == 0) {
+						for(int i = 0; i < list.size();i++) {
+							if(list.get(i).getEmployeeId() == dto.getEmployeeId()) {
+								list.remove(i);
+								break;
+							}
+						}
+						pbl2.MainActivity.sql.query("delete from tblEmployee where eemployeeID = "+dto.getEmployeeId());
+						pbl2.MainActivity.sql.commit();
+						dispose();
+						searchBtn.doClick();
+					}
+				}
+			});
+	        cancelButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
+	        cancel2Button.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
+
+	        p1.add(name);
+	        p1.add(depart);
+	        p1.add(posi);
+	        p1.add(date);
+	        p1.add(sal);
+	        p1.add(nameInput);
+	        p1.add(departC);
+	        p1.add(dInput);
+	        p1.add(posiC);
+	        p1.add(pInput);
+	        p1.add(dateInput);
+	        p1.add(salInput);
+	        p1.add(modiButton);
+	        p1.add(cancelButton);
+	        p2.add(info);
+	        p2.add(id);
+	        p2.add(idInput);
+	        p2.add(name2);
+	        p2.add(nameInput2);
+	        p2.add(deleteButton);
+	        p2.add(cancel2Button);
+	        tabPan.addTab("수정", null, p1, "정보를 수정합니다.");
+	        tabPan.addTab("삭제", null, p2, "정보를 삭제합니다.");
+	        this.add(tabPan);
+	        
+	    }
+	}
+
 	private void makeSearchPan() {
 		searchTypeGroup = new ButtonGroup();
 		searchIdRadio = new JRadioButton("ID로 찾기");
@@ -233,19 +583,19 @@ public class ViewEmployee implements ActionListener{
 		
 		departmentField = new JLabel("부서 : ");
 		departCombo = new JComboBox<>();
-		departCombo.addItem("객실팀");
-		departCombo.addItem("식당팀");
-		departCombo.addItem("직접 입력");
+		for(int i = 0; i<departList.length;i++) {
+			departCombo.addItem(departList[i]);
+		}
 		departInput = new JTextField();
 		departInput.setVisible(false);
 		
 		
 		positionField = new JLabel("직급 : ");
 		posiCombo = new JComboBox<>();
-		posiCombo.addItem("하우스키퍼 매니저ㅁ;ㅣㄹㄴㅇㅁㄴㅇㄹㅁㅇㄹㅁㅇㄹ");
-		posiCombo.addItem("하우스키퍼 매니저");
-		posiCombo.addItem("하우스키퍼");
-		posiCombo.addItem("직접 입력");		
+		for(int i = 0; i<posiList.length;i++) {
+			posiCombo.addItem(posiList[i]);
+		}
+				
 		posiInput = new JTextField();
 		posiInput.setVisible(false);
 		
@@ -355,7 +705,17 @@ public class ViewEmployee implements ActionListener{
 	}
 	
 	private void addData() {
-		int id = list.size()+1;
+		ResultSet rs = pbl2.MainActivity.sql.query("select max(eemployeeid) from tblemployee");
+		int id= 0;
+		try {
+			rs.next();
+			id = rs.getInt(1)+1;
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
 		int hotelId = 200;
 		
 		String name = null;
@@ -373,9 +733,9 @@ public class ViewEmployee implements ActionListener{
 		
 		String gender = null;
 		if(maleRadio.isSelected()) {
-			gender = maleRadio.getText();
+			gender = "M";
 		}else if(femaleRadio.isSelected()) {
-			gender = femaleRadio.getText();
+			gender = "F";
 		}
 		
 		Date date = null;
@@ -399,14 +759,6 @@ public class ViewEmployee implements ActionListener{
 			salary = Integer.parseInt(salaryInput.getText());
 		}
 		
-
-		System.out.println("name:" + name);
-		System.out.println("depart : " + depart);
-		System.out.println("gender : " + gender);
-		System.out.println("date : " + date);
-		System.out.println("position : " + position);
-		System.out.println("salary : " + salary);
-		
 		if(name == null || depart == null || gender == null || date == null || position == null || salary == -1) {
 			JOptionPane.showMessageDialog(null, "입력란을 확인해주세요.","확인", JOptionPane.WARNING_MESSAGE);
 			return;
@@ -419,6 +771,11 @@ public class ViewEmployee implements ActionListener{
 															+"\n급여    : " + salary, "확인", JOptionPane.OK_CANCEL_OPTION);
             if (result == 0) { //OK=0 , Cancel=2 리턴
         		DtoEmployee dto = new DtoEmployee(id, hotelId, name, depart, gender, date, position, salary);
+        		String query = "INSERT INTO tblEmployee (eEmployeeID, eHotelID, eName, eDepartment, eGender, eDateEnter, ePosition, eSalary) "
+        				+ "VALUES ("
+        				+ id + ", 200, '"+name+"', '"+depart+"', '"+gender+"', '"+date+"', '"+position+"',"+ salary
+        				+ ")";
+        		pbl2.MainActivity.sql.query(query);
         		list.add(dto);
         		currList.add(dto);
         		updateTableView();
@@ -475,9 +832,9 @@ public class ViewEmployee implements ActionListener{
 				name = searchInput.getText();
 			}
 			if(searchMaleRadio.isSelected()) {
-				gender = maleRadio.getText();
+				gender = "M";
 			}else if(searchFemaleRadio.isSelected()) {
-				gender = femaleRadio.getText();
+				gender = "F";
 			}else {
 				gender = null;
 			}
