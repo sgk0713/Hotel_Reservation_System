@@ -44,7 +44,7 @@ public class MainActivity implements ActionListener{
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem menuLogout;
-	private JPanel firstPan, secondPan, thirdPan, fourthPan, fifthPan;
+	private JPanel firstPan, secondPan, thirdPan, fourthPan, fifthPan, sixthPan;
 	private JLabel label;
 	private JTabbedPane jtp;
 	private double width, height;
@@ -251,6 +251,7 @@ public class MainActivity implements ActionListener{
 			makeThirdPan();
 			makeFourthPan();
 			makeFifthPan();
+			makeSixthPan();
 		}
 	}
 
@@ -304,5 +305,10 @@ public class MainActivity implements ActionListener{
 		fifthPan = new JPanel();
 		jtp.addTab("하우스키퍼", null, fifthPan, "하우스키퍼창으로 이동합니다.");
 	}
+	private void makeSixthPan() {
+		//sixPan = 
+		jtp.addTab("고객", null, sixthPan, "고객창으로 이동합니다.");
+	}
+	
 	
 }
