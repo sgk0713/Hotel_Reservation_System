@@ -40,7 +40,7 @@ import pbl2.dto.DtoRoom;
 
 public class MainActivity implements ActionListener{
 	private String auth;
-	private JFrame jf,f;
+	private JFrame jf;
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem menuLogout;
@@ -79,19 +79,20 @@ public class MainActivity implements ActionListener{
 			,"TBLROOM"//12
 			,"TBLHK"//13
 			};
-	SqlHelper sql;
+	static public SqlHelper sql;
 	ResultSet rs;
 	JProgressBar b;
 	public MainActivity(String auth) {
 		this.auth = auth;
 		sql = new SqlHelper();
-		sql.open();
+		
 		getDataFromDB();
 //		mainActivity();
 	}
 	
+	Thread ct;
 	private void getDataFromDB() {
-        jf = new JFrame("ProgressBar demo");
+        jf = new JFrame("DATA LOADING");
         jf.setLayout(null);
         jf.setSize(300, 100);
         
@@ -110,8 +111,27 @@ public class MainActivity implements ActionListener{
         
         jf.add(p);
         jf.setLocationRelativeTo(null);//make the frame as center
-        jf.setVisible(true); 
+        jf.setVisible(true);
+        ct = new Thread(new Runnable() {
+			String txt = ".";
+			@Override
+			public void run() {
+				try {
+					while(true) {
+						if(txt.length()==5) {
+							txt = "";
+						}
+						label.setText("Calculating"+txt);
+						Thread.sleep(400);
+						txt+=".";
+					}
+				} catch (InterruptedException e) {
+				}
+			}
+		});
+        ct.start();
         fill();
+        
     } 
   
     // function to increase progress 
@@ -121,6 +141,7 @@ public class MainActivity implements ActionListener{
 			public void run() {
 				int max = 0;
 				int start = 0;
+				sql.open();
 				String temp = "SELECT COUNT(*) FROM ";
 				for(int i = 0; i< tableList.length; i++) {
 					rs = sql.query(temp+tableList[i]);
@@ -134,6 +155,7 @@ public class MainActivity implements ActionListener{
 						e.printStackTrace();
 					}
 				}
+				ct.interrupt();
 				label.setText("0 / "+max);
 		        b.setVisible(true);
 		        int cur = 0;
@@ -220,6 +242,7 @@ public class MainActivity implements ActionListener{
 		Object source = e.getSource();
 		if(source == menuLogout) {
 			jf.setVisible(false);
+			sql.close();
 			new LoginActivity();
 		}
 	}
