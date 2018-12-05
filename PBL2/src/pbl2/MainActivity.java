@@ -48,20 +48,20 @@ public class MainActivity implements ActionListener{
 	private JLabel label;
 	private JTabbedPane jtp;
 	private double width, height;
-	public static ArrayList<DtoBookedRoom> bookedRoomList = new ArrayList<>();
-	public ArrayList<DtoCleanedRoom> cleanedRoomList = new ArrayList<>();
+	static public ArrayList<DtoBookedRoom> bookedRoomList = new ArrayList<>();
+	static public ArrayList<DtoCleanedRoom> cleanedRoomList = new ArrayList<>();
 	static public ArrayList<DtoCustomer> customerList = new ArrayList<>();
-	public ArrayList<DtoDish> dishList = new ArrayList<>();
-	public ArrayList<DtoDishOrder> dishOrderList = new ArrayList<>();
+	static public ArrayList<DtoDish> dishList = new ArrayList<>();
+	static public ArrayList<DtoDishOrder> dishOrderList = new ArrayList<>();
 	static public ArrayList<DtoEmployee> employeeList = new ArrayList<>();
-	public ArrayList<DtoFixture> fixtureList = new ArrayList<>();
-	public ArrayList<DtoHk> hkList = new ArrayList<>();
-	public ArrayList<DtoHotel> hotelList = new ArrayList<>();
-	public ArrayList<DtoMileage> mileageList = new ArrayList<>();
-	public ArrayList<DtoRcFixture> rcFixtureList = new ArrayList<>();
-	public ArrayList<DtoReceipt> receiptList = new ArrayList<>();
-	public ArrayList<DtoRepair> repairList = new ArrayList<>();
-	public ArrayList<DtoRoom> roomList = new ArrayList<>();
+	static public ArrayList<DtoFixture> fixtureList = new ArrayList<>();
+	static public ArrayList<DtoHk> hkList = new ArrayList<>();
+	static public ArrayList<DtoHotel> hotelList = new ArrayList<>();
+	static public ArrayList<DtoMileage> mileageList = new ArrayList<>();
+	static public ArrayList<DtoRcFixture> rcFixtureList = new ArrayList<>();
+	static public ArrayList<DtoReceipt> receiptList = new ArrayList<>();
+	static public ArrayList<DtoRepair> repairList = new ArrayList<>();
+	static public ArrayList<DtoRoom> roomList = new ArrayList<>();
 	
 	private String[] tableList = {
 			"TBLBOOKEDROOM"//0

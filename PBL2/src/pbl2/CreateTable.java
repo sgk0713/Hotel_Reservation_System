@@ -12,18 +12,18 @@ public class CreateTable {
 		
 		String[] list = {
 				"insertList_tblHotel",
+				"insertList_tblFixture",
+				"insertList_tblEmployee",
+				"insertList_tblRoom",
 				"insertList_tblCustomer",
+				"insertList_tblMileage",
 				"insertList_tblBookedRoom",
 				"insertList_tblCleanedRoom",
 				"insertList_tblDish",
 				"insertList_tblDishOrder",
-				"insertList_tblEmployee",
-				"insertList_tblFixture",
-				"insertList_tblMileage",
 				"insertList_tblRcFixture",
 				"insertList_tblReceipt",
-				"insertList_tblRepair",
-				"insertList_tblRoom"
+				"insertList_tblRepair"
 		};
 		for(int i = 0; i< list.length; i++) {
 			System.out.println(" ******* READING... < "+list[i]+" >... *******");

@@ -19,4 +19,4 @@ drop SEQUENCE tblBookedRoom_SEQ
 drop SEQUENCE tblDishOrder_SEQ
 drop SEQUENCE tblRepair_SEQ
 drop SEQUENCE tblReceipt_SEQ
-drop SEQUENCE tblRcFixtures_SEQ
+drop SEQUENCE tblRcFixture_SEQ

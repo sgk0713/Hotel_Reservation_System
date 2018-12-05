@@ -1,0 +1,5 @@
+INSERT INTO tblFixture (fFixtureID,fHotelID,fName,fType,fQuantity) VALUES(1101,200,'towel','disposable', 0)
+INSERT INTO tblFixture (fFixtureID,fHotelID,fName,fType,fQuantity) VALUES(1102,200,'pouch','posable', 0)
+INSERT INTO tblFixture (fFixtureID,fHotelID,fName,fType,fQuantity) VALUES(1103,200,'tissue','posable', 0)
+INSERT INTO tblFixture (fFixtureID,fHotelID,fName,fType,fQuantity) VALUES(1104,200,'Toilet shoes','posable', 0)
+INSERT INTO tblFixture (fFixtureID,fHotelID,fName,fType,fQuantity) VALUES(1105,200,'blanket','disposable', 0)
