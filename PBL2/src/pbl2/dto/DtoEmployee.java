@@ -10,7 +10,6 @@ public class DtoEmployee {
 	private Date dateEnter;
 	private String position;
 	private int salary;
-	private String state;
 	public DtoEmployee(int employeeId, int hotelId, String name, String department, String gender, Date dateEnter,
 			String position, int salary) {
 		super();
@@ -22,19 +21,6 @@ public class DtoEmployee {
 		this.dateEnter = dateEnter;
 		this.position = position;
 		this.salary = salary;
-	}
-	public DtoEmployee(int employeeId, int hotelId, String name, String department, String gender, Date dateEnter,
-			String position, int salary, String state) {
-		super();
-		this.employeeId = employeeId;
-		this.hotelId = hotelId;
-		this.name = name;
-		this.department = department;
-		this.gender = gender;
-		this.dateEnter = dateEnter;
-		this.position = position;
-		this.salary = salary;
-		this.state = state;
 	}
 	public int getEmployeeId() {
 		return employeeId;
@@ -83,11 +69,5 @@ public class DtoEmployee {
 	}
 	public void setSalary(int salary) {
 		this.salary = salary;
-	}
-	public String getState() {
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
 	}
 }

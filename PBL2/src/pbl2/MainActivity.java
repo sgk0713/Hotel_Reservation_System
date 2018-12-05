@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -14,6 +15,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 import javax.swing.border.BevelBorder;
 
@@ -22,20 +24,72 @@ import pbl2.controller.ViewReservation;
 
 public class MainActivity implements ActionListener{
 	private String auth;
-	private JFrame jf;
+	private JFrame jf,f;
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem menuLogout;
 	private JPanel firstPan, secondPan, thirdPan, fourthPan, fifthPan;
 	private JTabbedPane jtp;
 	private double width, height;
-
+	SqlHelper sql;
+	ResultSet rs;
+	JProgressBar b;
 	public MainActivity(String auth) {
 		this.auth = auth;
-		mainActivity();
+//		sql = new SqlHelper();
+//		sql.open();
+		getDataFromDB();
+//		mainActivity();
 	}
+	
+	private void getDataFromDB() {
+        jf = new JFrame("ProgressBar demo"); 
+        JPanel p = new JPanel();
+        
+        b = new JProgressBar();
+        b.setBounds(0,jf.getHeight()/4, 300, 50);
+        b.setValue(0);
+        b.setStringPainted(true); 
+        p.add(b); 
+        jf.add(p); 
+        jf.setSize(300, 100);
+        jf.setLocationRelativeTo(null);//make the frame as center
+        jf.setVisible(true); 
+        fill();
+    } 
+  
+    // function to increase progress 
+    private void fill() { 
+    	Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				int i = 0; 
+		        b.setVisible(true);
+		        try { 
+		            while (i <= 100) { 
+		                // fill the menu bar 
+		                b.setValue(i); 
+		                // delay the thread 
+		                Thread.sleep(20); 
+		                i++;
+		                if(i == 100) {
+		                	jf.setVisible(false);
+		                	mainActivity();
+//		                	return;
+		                }
+		            } 
+		        } 
+		        catch (Exception e) { 
+		        } 
+				
+			}
+		});
+    	t.start();
+        
+    } 
 
 	private void mainActivity() {
+		
 		jf = new JFrame();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		width = screenSize.getWidth() * 0.8;

@@ -11,6 +11,7 @@ drop table tblroom cascade CONSTRAINTS
 drop table tblfixture cascade CONSTRAINTS
 drop table tblhotel cascade CONSTRAINTS
 drop table tblmileage cascade CONSTRAINTS
+drop table tblhk cascade CONSTRAINTS
 drop SEQUENCE tblRoom_SEQ
 drop SEQUENCE tblCustomer_SEQ
 drop SEQUENCE tblEmployee_SEQ
@@ -18,4 +19,4 @@ drop SEQUENCE tblBookedRoom_SEQ
 drop SEQUENCE tblDishOrder_SEQ
 drop SEQUENCE tblRepair_SEQ
 drop SEQUENCE tblReceipt_SEQ
-drop SEQUENCE tblRcFixture_SEQ
+drop SEQUENCE tblRcFixtures_SEQ
