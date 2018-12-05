@@ -2,10 +2,12 @@ package pbl2;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Label;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -21,6 +23,20 @@ import javax.swing.border.BevelBorder;
 
 import pbl2.controller.ViewEmployee;
 import pbl2.controller.ViewReservation;
+import pbl2.dto.DtoBookedRoom;
+import pbl2.dto.DtoCleanedRoom;
+import pbl2.dto.DtoCustomer;
+import pbl2.dto.DtoDish;
+import pbl2.dto.DtoDishOrder;
+import pbl2.dto.DtoEmployee;
+import pbl2.dto.DtoFixture;
+import pbl2.dto.DtoHk;
+import pbl2.dto.DtoHotel;
+import pbl2.dto.DtoMileage;
+import pbl2.dto.DtoRcFixture;
+import pbl2.dto.DtoReceipt;
+import pbl2.dto.DtoRepair;
+import pbl2.dto.DtoRoom;
 
 public class MainActivity implements ActionListener{
 	private String auth;
@@ -29,30 +45,70 @@ public class MainActivity implements ActionListener{
 	private JMenu menu;
 	private JMenuItem menuLogout;
 	private JPanel firstPan, secondPan, thirdPan, fourthPan, fifthPan;
+	private JLabel label;
 	private JTabbedPane jtp;
 	private double width, height;
+	public static ArrayList<DtoBookedRoom> bookedRoomList = new ArrayList<>();
+	public ArrayList<DtoCleanedRoom> cleanedRoomList = new ArrayList<>();
+	static public ArrayList<DtoCustomer> customerList = new ArrayList<>();
+	public ArrayList<DtoDish> dishList = new ArrayList<>();
+	public ArrayList<DtoDishOrder> dishOrderList = new ArrayList<>();
+	static public ArrayList<DtoEmployee> employeeList = new ArrayList<>();
+	public ArrayList<DtoFixture> fixtureList = new ArrayList<>();
+	public ArrayList<DtoHk> hkList = new ArrayList<>();
+	public ArrayList<DtoHotel> hotelList = new ArrayList<>();
+	public ArrayList<DtoMileage> mileageList = new ArrayList<>();
+	public ArrayList<DtoRcFixture> rcFixtureList = new ArrayList<>();
+	public ArrayList<DtoReceipt> receiptList = new ArrayList<>();
+	public ArrayList<DtoRepair> repairList = new ArrayList<>();
+	public ArrayList<DtoRoom> roomList = new ArrayList<>();
+	
+	private String[] tableList = {
+			"TBLBOOKEDROOM"//0
+			,"TBLCLEANEDROOM"//1
+			,"TBLCUSTOMER"//2
+			,"TBLDISH"//3
+			,"TBLDISHORDER"//4
+			,"TBLEMPLOYEE"//5
+			,"TBLFIXTURE"//6
+			,"TBLHOTEL"//7
+			,"TBLMILEAGE"//8
+			,"TBLRCFIXTURE"//9
+			,"TBLRECEIPT"//10
+			,"TBLREPAIR"//11
+			,"TBLROOM"//12
+			,"TBLHK"//13
+			};
 	SqlHelper sql;
 	ResultSet rs;
 	JProgressBar b;
 	public MainActivity(String auth) {
 		this.auth = auth;
-//		sql = new SqlHelper();
-//		sql.open();
+		sql = new SqlHelper();
+		sql.open();
 		getDataFromDB();
 //		mainActivity();
 	}
 	
 	private void getDataFromDB() {
-        jf = new JFrame("ProgressBar demo"); 
+        jf = new JFrame("ProgressBar demo");
+        jf.setLayout(null);
+        jf.setSize(300, 100);
+        
         JPanel p = new JPanel();
+        p.setLayout(null);
+        p.setBounds(0, 0, 300, 100);
+        label = new JLabel();
         
         b = new JProgressBar();
-        b.setBounds(0,jf.getHeight()/4, 300, 50);
         b.setValue(0);
-        b.setStringPainted(true); 
-        p.add(b); 
-        jf.add(p); 
-        jf.setSize(300, 100);
+        b.setStringPainted(true);
+        b.setBounds(0,0, 300, 30);
+        label.setBounds(120,b.getHeight(),300,30);
+        p.add(b);
+        p.add(label);
+        
+        jf.add(p);
         jf.setLocationRelativeTo(null);//make the frame as center
         jf.setVisible(true); 
         fill();
@@ -63,29 +119,76 @@ public class MainActivity implements ActionListener{
     	Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				int i = 0; 
+				int max = 0;
+				int start = 0;
+				String temp = "SELECT COUNT(*) FROM ";
+				for(int i = 0; i< tableList.length; i++) {
+					rs = sql.query(temp+tableList[i]);
+					try {
+						if(rs != null) {
+							while(rs.next()) {
+								max += rs.getInt("count(*)");
+							}
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				label.setText("0 / "+max);
 		        b.setVisible(true);
+		        int cur = 0;
 		        try { 
-		            while (i <= 100) { 
-		                // fill the menu bar 
-		                b.setValue(i); 
-		                // delay the thread 
-		                Thread.sleep(20); 
-		                i++;
-		                if(i == 100) {
-		                	jf.setVisible(false);
-		                	mainActivity();
-//		                	return;
-		                }
-		            } 
-		        } 
-		        catch (Exception e) { 
+	                temp = "SELECT * from ";
+	                for(int i = 0 ; i < tableList.length; i++) {
+	                	rs = sql.query(temp+tableList[i]);
+	                	while(rs.next()) {
+	                		if(i == 0) {//"TBLBOOKEDROOM"//0
+	                			bookedRoomList.add(new DtoBookedRoom(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getDate(4), rs.getDate(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getString(9)));
+	                		}else if(i == 1) {//"TBLCLEANEDROOM"//1
+	                			cleanedRoomList.add(new DtoCleanedRoom(rs.getInt(1), rs.getInt(2), rs.getString(3)));
+	                		}else if(i == 2) {//"TBLCUSTOMER"//2
+	                			customerList.add(new DtoCustomer(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
+	                		}else if(i == 3) {//"TBLDISH"//3
+	                			dishList.add(new DtoDish(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getBlob(4)));
+	                		}else if(i == 4) {//"TBLDISHORDER"//4
+	                			dishOrderList.add(new DtoDishOrder(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getDate(4), rs.getTime(5), rs.getInt(6), rs.getString(7)));
+	                		}else if(i == 5) {//"TBLEMPLOYEE"//5
+	                			employeeList.add(new DtoEmployee(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDate(6), rs.getString(7), rs.getInt(8)));
+	                		}else if(i == 6) {//"TBLFIXTURE"//6
+	                			fixtureList.add(new DtoFixture(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getInt(5)));
+	                		}else if(i == 7) {//"TBLHOTEL"//7
+	                			hotelList.add(new DtoHotel(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6), rs.getString(7)));
+	                		}else if(i == 8) {//"TBLMILEAGE"//8
+	                			mileageList.add(new DtoMileage(rs.getInt(1), rs.getInt(2)));
+	                		}else if(i == 9) {//"TBLRCFIXTURE"//9
+	                			rcFixtureList.add(new DtoRcFixture(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4), rs.getDate(5), rs.getString(6)));
+	                		}else if(i == 10) {//"TBLRECEIPT"//10
+	                			receiptList.add(new DtoReceipt(rs.getInt(1), rs.getInt(2), rs.getDate(3), rs.getTime(4), rs.getString(5), rs.getInt(6)));
+	                		}else if(i == 11) {//"TBLREPAIR"//11
+	                			repairList.add(new DtoRepair(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getDate(4), rs.getTime(5), rs.getString(6), rs.getInt(7), rs.getString(8), rs.getString(9), rs.getString(10), rs.getString(11)));
+	                		}else if(i == 12) {//"TBLROOM"//12
+	                			roomList.add(new DtoRoom(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7), rs.getString(8)));
+	                		}else if(i == 13) {//"TBLHK"//13
+	                			hkList.add(new DtoHk(rs.getInt(1), rs.getString(2), rs.getTime(3), rs.getString(4)));
+	                		}
+	                		start++;
+	                		cur = (int)(((float)start/max)*100.0);
+	                		b.setValue(cur);
+	                		label.setText(start+" / " + max);
+	                		Thread.sleep(10);
+	                	}
+	                }
+	                if(start >= max) {
+	                	jf.setVisible(false);
+	                	mainActivity();
+	                }
+		        }catch (Exception e) {
+		        	e.printStackTrace();
 		        } 
 				
 			}
 		});
     	t.start();
-        
     } 
 
 	private void mainActivity() {
@@ -183,12 +286,12 @@ public class MainActivity implements ActionListener{
 	}
 
 	private void makeSecondPan() {
-		secondPan = new ViewReservation(new ArrayList<>(), jtp.getWidth(), jtp.getHeight()).getPanel();
+		secondPan = new ViewReservation(jtp.getWidth(), jtp.getHeight()).getPanel();
 		jtp.addTab("예약", null, secondPan, "캘린더창으로 이동합니다.");
 	}
 
 	private void makeThirdPan() {
-		thirdPan = new ViewEmployee(new ArrayList<>(), jtp.getWidth(), jtp.getHeight()).getPanel();
+		thirdPan = new ViewEmployee(employeeList, jtp.getWidth(), jtp.getHeight()).getPanel();
 		jtp.addTab("직원", null, thirdPan, "직원관리창으로 이동합니다.");
 	}
 

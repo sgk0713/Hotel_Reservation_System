@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.Date;
 import java.util.ArrayList;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,9 +22,12 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+import pbl2.MainActivity;
+import pbl2.dto.DtoCustomer;
 import pbl2.dto.DtoEmployee;
 
 public class ViewEmployee implements ActionListener{
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == searchIdRadio) {

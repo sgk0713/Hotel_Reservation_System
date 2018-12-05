@@ -33,7 +33,6 @@ public class ViewReservation implements ActionListener{
 		}
 	}
 
-	private ArrayList<DtoRoom> list;
 	private ArrayList<DtoRoom> currList;
 	private int width, height;
 	private DefaultTableModel model, model2;
@@ -56,8 +55,7 @@ public class ViewReservation implements ActionListener{
 	private JButton lookupBtn, searchBtn, regisBtn, checkInBtn, checkOutBtn;
 	private JScrollPane scroll, scroll2;
 	
-	public ViewReservation(ArrayList<DtoRoom> list, int width, int height) {
-		this.list = list;
+	public ViewReservation(int width, int height) {
 		currList = new ArrayList<>();
 		this.width = width-30;
 		this.height = height;
