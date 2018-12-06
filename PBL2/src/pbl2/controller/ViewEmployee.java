@@ -514,6 +514,9 @@ public class ViewEmployee implements ActionListener{
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
+				if(c == KeyEvent.VK_ENTER) {
+					searchBtn.doClick();
+				}
 				if(typeFlag == 0) {
 					if(!Character.isDigit(c)) {
 						e.consume();
@@ -820,10 +823,12 @@ public class ViewEmployee implements ActionListener{
 		if(typeFlag == 0) {
 			if(!searchInput.getText().isEmpty()) {
 				id = Integer.valueOf(searchInput.getText());
-				for(int i = 0; i < list.size(); i++) {
-					if(list.get(i).getEmployeeId() == id) {
-						currList.add(list.get(i));
-					}
+			}
+			for(int i = 0; i < list.size(); i++) {
+				if(id != -1 && list.get(i).getEmployeeId() == id) {
+					currList.add(list.get(i));
+				}else {
+					currList.add(list.get(i));
 				}
 			}
 		}else {

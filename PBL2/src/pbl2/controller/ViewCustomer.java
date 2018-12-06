@@ -388,6 +388,9 @@ public class ViewCustomer implements ActionListener{
 	            		String tempPhone = null;
 	            		if(!phoneInput.getText().isEmpty()) {
 	            			tempPhone = phoneInput.getText();
+	            			if(tempPhone.length() != 13) {
+	            				tempPhone = "wrong";
+	            			}
 	            		}
 	            		
 	            		String tempEmail = null;
@@ -406,14 +409,25 @@ public class ViewCustomer implements ActionListener{
 	            		String tempcn = null;
 	            		if(!cardInput.getText().isEmpty()) {
 	            			tempcn = cardInput.getText();
+	            			if(tempcn.length() != 19) {
+	            				tempcn = "wrong";
+	            			}
 	            		}
 	            		
 	            		String tempcmt = null;
 	            		if(!commentInput.getText().isEmpty()) {
 	            			tempcmt = commentInput.getText();
 	            		}
+	            		if(tempPhone.equals("wrong")) {
+	            			JOptionPane.showMessageDialog(null, "전화번호를 확인해주세요.","확인", JOptionPane.WARNING_MESSAGE);
+	            			return;
+	            		}
 	            		if(tempEmail.equals("wrong")) {
 	            			JOptionPane.showMessageDialog(null, "이메일 형식을 확인해주세요.","확인", JOptionPane.WARNING_MESSAGE);
+	            			return;
+	            		}
+	            		if(tempcn.equals("wrong")) {
+	            			JOptionPane.showMessageDialog(null, "카드번호를 확인해주세요.","확인", JOptionPane.WARNING_MESSAGE);
 	            			return;
 	            		}
 	            		if(tempName == null || tempPhone == null || tempEmail == null || tempaddress == null || tempcn == null) {
@@ -531,6 +545,9 @@ public class ViewCustomer implements ActionListener{
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
+				if(c == KeyEvent.VK_ENTER) {
+					searchBtn.doClick();
+				}
 				if(typeFlag == 0) {
 					if(!Character.isDigit(c)) {
 						e.consume();
@@ -551,6 +568,9 @@ public class ViewCustomer implements ActionListener{
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
 				int len = searchPhoneInput.getText().length();
+				if(c == KeyEvent.VK_ENTER) {
+					searchBtn.doClick();
+				}
 				if(len < 4) {
 					if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
 						return;
@@ -746,7 +766,10 @@ public class ViewCustomer implements ActionListener{
 		
 		String phone = null;
 		if(!phoneInput.getText().isEmpty()) {
-				phone = phoneInput.getText();
+			phone = phoneInput.getText();
+			if(phone.length() != 13) {
+				phone = "wrong";
+			}
 		}
 		
 		String email = null;
@@ -765,6 +788,9 @@ public class ViewCustomer implements ActionListener{
 		String cardnumber = null;
 		if (!cardnumberInput.getText().isEmpty()) {
 			cardnumber = cardnumberInput.getText();
+			if(cardnumber.length()!=19) {
+				cardnumber = "wrong";
+			}
 		}
 		
 		String comment = null;
@@ -782,8 +808,16 @@ public class ViewCustomer implements ActionListener{
 		System.out.println("comment : " + comment);
 		System.out.println("mileage : "+mileage);
 		
+		if(phone.equals("wrong")) {
+			JOptionPane.showMessageDialog(null, "전화번호를 확인해주세요.","확인", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 		if(email.equals("wrong")) {
 			JOptionPane.showMessageDialog(null, "이메일 형식을 확인해주세요.","확인", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		if(cardnumber.equals("wrong")) {
+			JOptionPane.showMessageDialog(null, "카드번호를 확인해주세요.","확인", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		if(name == null || phone == null || email == null || address == null || cardnumber == null ) {
@@ -851,13 +885,15 @@ public class ViewCustomer implements ActionListener{
 		if(typeFlag == 0) { //ID으로 찾기
 			if(!searchInput.getText().isEmpty()) {
 				id = Integer.valueOf(searchInput.getText());
-				for(int i = 0; i < list.size(); i++) {
-					System.out.println(list.get(i).getCustomerId()); ///////
-					if(list.get(i).getCustomerId() == id) {
-						currList.add(list.get(i));
-					}
+			}
+			for(int i = 0; i < list.size(); i++) {
+				if(id != -1 && list.get(i).getCustomerId() == id) {
+					currList.add(list.get(i));
+				}else {
+					currList.add(list.get(i));
 				}
 			}
+		
 		}else { //이름으로 찾기+전화번호 뒷자리로 찾기
 			if(!searchInput.getText().isEmpty()) {	//이름 입력 받음
 				name = searchInput.getText().toUpperCase();
