@@ -38,21 +38,21 @@ public class ViewReservation implements ActionListener{
 	private DefaultTableModel model, model2;
 	private JTable table, table2;
 	private JPanel mainPan, searchPan, bookPan, detailPan, detailPan2;
-	private JLabel dateField, intervalField, adultField, childField, eaField, ea2Field, viewField, roomTypeField, bedFiled
+	private JLabel dateField, intervalField, adultField, childField, eaField, ea2Field, viewField, roomTypeField, bedField
 					, searchNameField, searchPhoneField
-					, detailNameField, detailPhoneField
-					, detail2NameField, detail;
+					, detailNameField, detailPhoneField 
+					, detailRoomNumTitle, detailRoomNum, detailNameTitle, detailName, detailPhoneTitle, detailPhone, detailReceiptTitle, detailReceipt, detailTotalPriceTitle, detailTotalPrice;
 	private JTextField dateEnterInput, dateExitInput, adultInput, childInput
 					, searchNameInput, searchPhoneInput
 					, detailNameInput, detailPhoneInput;
 	private JTabbedPane regiSearchJtp;
-	private String[] roomType = {"스탠다드", "디럭스", "스위트"};
-	private String[] viewType = {"오션", "시티", "마운틴"};
-	private String[] bedType = {"싱글", "더블", "트윈", "트리플"};
+	private String[] roomType = {"standard", "deluxe", "superior", "premium"};
+	private String[] viewType = {"ocean", "city", "mountain"};
+	private String[] bedType = {"single", "double", "twin", "triple"};
 	private JCheckBox[] viewCheckBox;
 	private JCheckBox[] bedCheckBox;
 	private JCheckBox[] roomTypeCheckBox;
-	private JButton lookupBtn, searchBtn, regisBtn, checkInBtn, checkOutBtn;
+	private JButton lookupBtn, searchBtn, regisBtn, checkInBtn, checkOutBtn, noShowBtn;
 	private JScrollPane scroll, scroll2;
 	
 	public ViewReservation(int width, int height) {
@@ -85,8 +85,10 @@ public class ViewReservation implements ActionListener{
 			public void stateChanged(ChangeEvent e) {
 				if(regiSearchJtp.getSelectedIndex() == 0) {
 					scroll.setViewportView(table);
+					scroll2.setViewportView(detailPan);
 				}else {
 					scroll.setViewportView(table2);
+					scroll2.setViewportView(detailPan2);
 				}
 				clearTableView();
 			}
@@ -100,12 +102,12 @@ public class ViewReservation implements ActionListener{
 		scroll = new JScrollPane();
 		scroll.setViewportView(table);
 		scroll.setBounds(searchAreaWidth, 10, resultAreaWidth, height-20);
-		
-		detailPan = new JPanel();
-		detailPan2 = new JPanel();
 		scroll2 = new JScrollPane();
 		scroll2.setBounds(searchAreaWidth+resultAreaWidth, 10, width-searchAreaWidth-resultAreaWidth, height-20);
+		
+		detailPan = new JPanel();
 		makeDetailPan();
+		detailPan2 = new JPanel();		
 		makeDetailPan2();
 		scroll2.setViewportView(detailPan);
 		
@@ -154,7 +156,7 @@ public class ViewReservation implements ActionListener{
 		
 		roomTypeField = new JLabel("객실 타입");
 		viewField = new JLabel("뷰 타입");
-		bedFiled = new JLabel("침대 타입");
+		bedField = new JLabel("침대 타입");
 	
 		roomTypeCheckBox = new JCheckBox[roomType.length];
 		viewCheckBox = new JCheckBox[viewType.length];
@@ -192,7 +194,7 @@ public class ViewReservation implements ActionListener{
 		for(int i = 0; i< viewCheckBox.length;i++) {
 			viewCheckBox[i].setBounds(x+space, y+=weight, inputW, h);
 		}
-		bedFiled.setBounds(x, y+=weight, fieldW, weight);
+		bedField.setBounds(x, y+=weight, fieldW, weight);
 		for(int i = 0; i< bedCheckBox.length;i++) {
 			bedCheckBox[i].setBounds(x+space, y+=weight, inputW, h);
 		}
@@ -214,7 +216,7 @@ public class ViewReservation implements ActionListener{
 			bookPan.add(viewCheckBox[i]);
 			viewCheckBox[i].setSelected(true);
 		}
-		bookPan.add(bedFiled);
+		bookPan.add(bedField);
 		for(int i = 0; i< bedCheckBox.length;i++) {
 			bookPan.add(bedCheckBox[i]);
 			bedCheckBox[i].setSelected(true);
@@ -238,7 +240,7 @@ public class ViewReservation implements ActionListener{
 		
 		regisBtn = new JButton("예약하기");		
 		
-		int x = detailPan.getX() + 20;
+		int x = 20;
 		int space = 10;
 		int y = 10;
 		int fieldW = 50;
@@ -276,56 +278,56 @@ public class ViewReservation implements ActionListener{
 	}
 	
 	private void makeDetailPan2() {
-		detailNameField = new JLabel("예약자 이름");
-		detailNameInput = new JTextField();
+		detailRoomNumTitle = new JLabel("방 번호");
+		detailRoomNum = new JLabel();
+		detailNameTitle = new JLabel("고객명");
+		detailName = new JLabel();
+		detailPhoneTitle = new JLabel("고객 전화번호");
+		detailPhone = new JLabel();
+		detailReceiptTitle = new JLabel("사용내역");
+		detailReceipt = new JLabel();
+		detailTotalPriceTitle = new JLabel("총 가격");
+		detailTotalPrice = new JLabel();
 		
-		detailPhoneField = new JLabel("전화번호");
-		detailPhoneInput = new JTextField();
 		
-		adultField = new JLabel("성인");
-		adultInput = new JTextField();
-		eaField = new JLabel("명");
-		childField = new JLabel("어린이");
-		childInput = new JTextField();
-		ea2Field = new JLabel("명");
+		checkInBtn = new JButton("CheckIn");
+		checkOutBtn = new JButton("CheckOut");
+		noShowBtn = new JButton("No-Show");
 		
-		regisBtn = new JButton("예약하기");		
-		
-		int x = detailPan.getX() + 20;
+		int x = 20;
 		int space = 10;
 		int y = 10;
 		int fieldW = 50;
 		int inputW = 100;
 		int h = 20;
 		int weight = ((regiSearchJtp.getHeight())/20);
-		detailPan.setLayout(null);
-		detailNameField.setBounds(x, y, inputW, h);
-		detailNameInput.setBounds(x+space, y+=weight, inputW, h);
+		detailPan2.setLayout(null);
+		detailRoomNumTitle.setBounds(x, y, inputW, h);
+		detailRoomNum.setBounds(x+space, y+=weight, inputW, h);
 		
-		detailPhoneField.setBounds(x, y+=weight, fieldW, h);
-		detailPhoneInput.setBounds(x+space, y+=weight, inputW, h);
+		detailNameTitle.setBounds(x, y+=weight, fieldW, h);
+		detailName.setBounds(x+space, y+=weight, inputW, h);
 		
-		adultField.setBounds(x, y+=weight, fieldW, h);
-		adultInput.setBounds(x+adultField.getWidth(), y, fieldW-20, h);
-		eaField.setBounds(adultInput.getX()+adultInput.getWidth(), y, fieldW, h);
-		childField.setBounds(x, y+=weight, fieldW, h);
-		childInput.setBounds(x+childField.getWidth(), y, fieldW-20, h);
-		ea2Field.setBounds(childInput.getX()+childInput.getWidth(), y, fieldW, h);
-		regisBtn.setBounds(x-20+(scroll2.getWidth()-10)/2-inputW/2, y+=weight*2, inputW, weight+h);
-		regisBtn.setEnabled(false);
-		regisBtn.addActionListener(this);
+		detailPhoneTitle.setBounds(x, y+=weight, fieldW, h);
+		detailPhone.setBounds(x+adultField.getWidth(), y, fieldW-20, h);
+		detailReceiptTitle.setBounds(adultInput.getX()+adultInput.getWidth(), y, fieldW, h);
+		detailReceipt.setBounds(x, y+=weight, fieldW, h);
+		detailTotalPriceTitle.setBounds(x+childField.getWidth(), y, fieldW-20, h);
+		detailTotalPrice.setBounds(childInput.getX()+childInput.getWidth(), y, fieldW, h);
+		checkInBtn.setBounds(x-20+(scroll2.getWidth()-10)/2-inputW/2, y+=weight*2, inputW, weight+h);
 		
-		detailPan.add(detailNameField);
-		detailPan.add(detailNameInput);
-		detailPan.add(detailPhoneField);
-		detailPan.add(detailPhoneInput);
-		detailPan.add(adultField);
-		detailPan.add(adultInput);
-		detailPan.add(eaField);
-		detailPan.add(childField);
-		detailPan.add(childInput);
-		detailPan.add(ea2Field);
-		detailPan.add(regisBtn);
+		
+		detailPan2.add(detailRoomNumTitle);
+		detailPan2.add(detailRoomNum);
+		detailPan2.add(detailNameTitle);
+		detailPan2.add(detailName);
+		detailPan2.add(detailPhoneTitle);
+		detailPan2.add(detailPhone);
+		detailPan2.add(detailReceiptTitle);
+		detailPan2.add(detailReceipt);
+		detailPan2.add(detailTotalPriceTitle);
+		detailPan2.add(detailTotalPrice);
+		detailPan2.add(checkInBtn);
 	}
 	
 	private void showRoomList() {

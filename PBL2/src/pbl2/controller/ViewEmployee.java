@@ -828,7 +828,7 @@ public class ViewEmployee implements ActionListener{
 			}
 		}else {
 			if(!searchInput.getText().isEmpty()) {
-				name = searchInput.getText();
+				name = searchInput.getText().toUpperCase();
 			}
 			if(searchMaleRadio.isSelected()) {
 				gender = "M";
@@ -846,7 +846,7 @@ public class ViewEmployee implements ActionListener{
 					}else if(tempDto.getGender().equals(gender)) {
 						currList.add(tempDto);
 					}
-				}else if(tempDto.getName().equals(name)) {
+				}else if(tempDto.getName().toUpperCase().equals(name)) {
 					if(gender == null) {
 						currList.add(tempDto);
 					}else if(tempDto.getGender().equals(gender)) {

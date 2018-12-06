@@ -21,6 +21,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 import javax.swing.border.BevelBorder;
 
+import pbl2.controller.ViewCustomer;
 import pbl2.controller.ViewEmployee;
 import pbl2.controller.ViewReservation;
 import pbl2.controller.ViewRoomService;
@@ -330,7 +331,7 @@ public class MainActivity implements ActionListener{
 		jtp.addTab("하우스키퍼", null, fifthPan, "하우스키퍼창으로 이동합니다.");
 	}
 	private void makeSixthPan() {
-		//sixPan = 
+		sixthPan = new ViewCustomer(customerList, mileageList, jtp.getWidth(), jtp.getHeight()).getPanel();
 		jtp.addTab("고객", null, sixthPan, "고객창으로 이동합니다.");
 	}
 	
