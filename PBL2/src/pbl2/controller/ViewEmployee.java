@@ -1,6 +1,7 @@
 package pbl2.controller;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -293,6 +296,13 @@ public class ViewEmployee implements ActionListener{
 	        cancel2Button.setBounds((tabPan.getWidth()-20)/2-(w+inputW)/2, y, w+inputW, h);
 	        deleteButton.setEnabled(false);
 	        
+	        modiButton.setBorderPainted(true);
+	        modiButton.setBorder(BorderFactory.createLineBorder(new Color(72, 22, 243)));
+	        modiButton.setForeground(new Color(72, 22, 243));
+	        deleteButton.setBorderPainted(true);
+	        deleteButton.setBorder(BorderFactory.createLineBorder(new Color(207,207,207)));
+			deleteButton.setForeground(new Color(207,207,207));
+	       
 	        nameInput.setText(dto.getName());
 	        departC.setSelectedItem(dto.getDepartment());
 	        posiC.setSelectedItem(dto.getPosition());
@@ -331,8 +341,13 @@ public class ViewEmployee implements ActionListener{
 				public void keyReleased(KeyEvent e) {
 					if(idInput.getText().equals(String.valueOf(dto.getEmployeeId())) && nameInput2.getText().equals(dto.getName())) {
 						deleteButton.setEnabled(true);
+					    deleteButton.setBorder(BorderFactory.createLineBorder(new Color(251,33,31)));
+					    deleteButton.setForeground(new Color(251,33,31));
+					    
 					}else {
 						deleteButton.setEnabled(false);
+						deleteButton.setBorder(BorderFactory.createLineBorder(new Color(207,207,207)));
+						deleteButton.setForeground(new Color(207,207,207));
 					}
 				}
 				@Override
@@ -345,8 +360,12 @@ public class ViewEmployee implements ActionListener{
 				public void keyReleased(KeyEvent e) {
 					if(idInput.getText().equals(String.valueOf(dto.getEmployeeId())) && nameInput2.getText().equals(dto.getName())) {
 						deleteButton.setEnabled(true);
+						deleteButton.setBorder(BorderFactory.createLineBorder(new Color(251,33,31)));
+					    deleteButton.setForeground(new Color(251,33,31));
 					}else {
 						deleteButton.setEnabled(false);
+						deleteButton.setBorder(BorderFactory.createLineBorder(new Color(207,207,207)));
+						deleteButton.setForeground(new Color(207,207,207));
 					}
 				}
 				@Override
