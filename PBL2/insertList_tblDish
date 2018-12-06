@@ -1,0 +1,8 @@
+INSERT INTO tblDish (dmDishID,dmName,dmPrice)VALUES (10081,'salad',13000)
+INSERT INTO tblDish (dmDishID,dmName,dmPrice)VALUES (10082,'steak',47000)
+INSERT INTO tblDish (dmDishID,dmName,dmPrice)VALUES (10083,'chicken',23000) 
+INSERT INTO tblDish (dmDishID,dmName,dmPrice)VALUES (10084,'britto',8000) 
+INSERT INTO tblDish (dmDishID,dmName,dmPrice)VALUES (10085,'toast',6000) 
+INSERT INTO tblDish (dmDishID,dmName,dmPrice)VALUES (10086,'fruit_juice',5000)
+INSERT INTO tblDish (dmDishID,dmName,dmPrice)VALUES (10087,'bear',6000)
+INSERT INTO tblDish (dmDishID,dmName,dmPrice)VALUES (10088,'wine',30000)

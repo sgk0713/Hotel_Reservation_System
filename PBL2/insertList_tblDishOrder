@@ -1,0 +1,7 @@
+INSERT INTO tblDishOrder (doDishOrderID, doDishID, doBookID, doDate, doOrderTime, doQuantity, doDelivered) VALUES (1111, 10081, 5002, to_date('25/12/2018','DD/MM/YYYY'), CURRENT_TIMESTAMP, 1, 'O')
+INSERT INTO tblDishOrder (doDishOrderID, doDishID, doBookID, doDate, doOrderTime, doQuantity, doDelivered) VALUES (1112, 10082, 5003, to_date('25/12/2018','DD/MM/YYYY'), CURRENT_TIMESTAMP, 2, 'O')
+INSERT INTO tblDishOrder (doDishOrderID, doDishID, doBookID, doDate, doOrderTime, doQuantity, doDelivered) VALUES (1113, 10083, 5004, to_date('25/12/2018','DD/MM/YYYY'), CURRENT_TIMESTAMP, 3, 'O')
+INSERT INTO tblDishOrder (doDishOrderID, doDishID, doBookID, doDate, doOrderTime, doQuantity, doDelivered) VALUES (1114, 10084, 5005, to_date('25/12/2018','DD/MM/YYYY'), CURRENT_TIMESTAMP, 1, 'X')
+INSERT INTO tblDishOrder (doDishOrderID, doDishID, doBookID, doDate, doOrderTime, doQuantity, doDelivered) VALUES (1115, 10085, 5006, to_date('25/12/2018','DD/MM/YYYY'), CURRENT_TIMESTAMP, 2, 'X')
+INSERT INTO tblDishOrder (doDishOrderID, doDishID, doBookID, doDate, doOrderTime, doQuantity, doDelivered) VALUES (1116, 10086, 5007, to_date('25/12/2018','DD/MM/YYYY'), CURRENT_TIMESTAMP, 3, 'O')
+INSERT INTO tblDishOrder (doDishOrderID, doDishID, doBookID, doDate, doOrderTime, doQuantity, doDelivered) VALUES (1117, 10087, 5008, to_date('25/12/2018','DD/MM/YYYY'), CURRENT_TIMESTAMP, 2, 'O')

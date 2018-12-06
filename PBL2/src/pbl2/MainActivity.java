@@ -23,6 +23,7 @@ import javax.swing.border.BevelBorder;
 
 import pbl2.controller.ViewEmployee;
 import pbl2.controller.ViewReservation;
+import pbl2.controller.ViewRoomService;
 import pbl2.dto.DtoBookedRoom;
 import pbl2.dto.DtoCleanedRoom;
 import pbl2.dto.DtoCustomer;
@@ -320,7 +321,7 @@ public class MainActivity implements ActionListener{
 	}
 
 	private void makeFourthPan() {
-		fourthPan = new JPanel();
+		fourthPan = new ViewRoomService().getPanel();
 		jtp.addTab("룸서비스", null, fourthPan, "룸서비스창으로 이동합니다.");
 	}
 

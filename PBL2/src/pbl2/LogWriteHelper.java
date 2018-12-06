@@ -7,7 +7,6 @@ import java.nio.file.Path;
 
 public class LogWriteHelper {
 	private String fileName = "";
-	private Path list;
 	private File file;
 	public LogWriteHelper(String fileName) {
 		this.setFileName(fileName);

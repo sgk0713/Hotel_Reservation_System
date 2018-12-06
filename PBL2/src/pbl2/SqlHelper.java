@@ -2,13 +2,14 @@ package pbl2;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class SqlHelper {
 
-	private Connection conn;
+	public Connection conn;
 	
 	//Variables for JDBC
 	private final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
@@ -18,7 +19,8 @@ public class SqlHelper {
 	//DB user, password
 	private String user = "system"; //user
 	private String pass = "oracle"; //password
-	private Statement stmt;
+	public Statement stmt;
+	public PreparedStatement prstmt;
 	
 	
 	public SqlHelper() {
@@ -107,6 +109,19 @@ public class SqlHelper {
 			return count;
 		} catch (SQLException e) {
 			System.out.println("SqlHelper.getColumnNumber() ERROR :\n\tL " + e.getMessage());
+			return 0;
+		}	
+	}
+	
+	public int getRowNumber(String tableName) {
+		try {
+			String query = "select count(*) from " + tableName.toUpperCase();
+			ResultSet rs = query(query);
+			rs.next();
+			int count = rs.getInt(1);
+			return count;
+		} catch (SQLException e) {
+			System.out.println("SqlHelper.getRowNumber() ERROR :\n\tL " + e.getMessage());
 			return 0;
 		}	
 	}

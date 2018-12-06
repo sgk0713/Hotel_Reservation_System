@@ -55,7 +55,7 @@ COMMENT ON COLUMN tblFixture.fName IS '비품 이름'
 COMMENT ON COLUMN tblFixture.fType IS '비품 종류'
 COMMENT ON COLUMN tblFixture.fQuantity IS '비품 현재 수량'
 ALTER TABLE tblFixture ADD CONSTRAINT FK_tblFixture_fHotelID_tblHote FOREIGN KEY (fHotelID) REFERENCES tblHotel (hHotelID)
-CREATE TABLE tblDish( dmDishID INT NOT NULL, dmName VARCHAR2(200) NOT NULL, dmPrice INT NOT NULL, dmImage BLOB NOT NULL, CONSTRAINT TBLDISH_PK PRIMARY KEY (dmDishID))
+CREATE TABLE tblDish( dmDishID INT NOT NULL, dmName VARCHAR2(200) NOT NULL, dmPrice INT NOT NULL, dmImage BLOB NULL, CONSTRAINT TBLDISH_PK PRIMARY KEY (dmDishID))
 COMMENT ON TABLE tblDish IS '음식 메뉴 테이블'
 COMMENT ON COLUMN tblDish.dmDishID IS '음식 ID 주키'
 COMMENT ON COLUMN tblDish.dmName IS '음식 이름'
