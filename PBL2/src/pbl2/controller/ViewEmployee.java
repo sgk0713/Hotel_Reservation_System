@@ -2,13 +2,8 @@ package pbl2.controller;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -17,7 +12,6 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -31,12 +25,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
-
 import pbl2.dto.DtoEmployee;
 
 public class ViewEmployee implements ActionListener{
@@ -184,6 +176,7 @@ public class ViewEmployee implements ActionListener{
 	}
 	
 	class ModifyDialog extends JDialog{
+		private static final long serialVersionUID = 739480446049992367L;
 		JLabel id, name, name2, depart, posi, date, sal, info;
 		JTextField idInput, nameInput, nameInput2, dateInput, salInput, dInput, pInput;
 		JComboBox<String> departC, posiC;
@@ -529,16 +522,9 @@ public class ViewEmployee implements ActionListener{
 				}
 			}
 			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
+			public void keyReleased(KeyEvent e) {}
 			@Override
-			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void keyPressed(KeyEvent e) {}
 		});
 		
 		searchGenderField = new JLabel("성별 : ");
@@ -718,11 +704,6 @@ public class ViewEmployee implements ActionListener{
 		
 	}
 	
-	private void removeData(int idx) {
-		model.removeRow(idx);
-		updateTableView();
-	}
-	
 	private void addData() {
 		ResultSet rs = pbl2.MainActivity.sql.query("select max(eemployeeid) from tblemployee");
 		int id= 0;
@@ -730,7 +711,6 @@ public class ViewEmployee implements ActionListener{
 			rs.next();
 			id = rs.getInt(1)+1;
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
