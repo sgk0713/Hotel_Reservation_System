@@ -138,6 +138,20 @@ public class MainActivity implements ActionListener{
   
     // function to increase progress 
     private void fill() { 
+    	bookedRoomList.clear();
+    	cleanedRoomList.clear();
+    	customerList.clear();
+    	dishList.clear();
+    	dishOrderList.clear();
+    	employeeList.clear();
+    	fixtureList.clear();
+    	hkList.clear();
+    	hotelList.clear();
+    	mileageList.clear();
+    	rcFixtureList.clear();
+    	receiptList.clear();
+    	repairList.clear();
+    	roomList.clear();
     	Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
