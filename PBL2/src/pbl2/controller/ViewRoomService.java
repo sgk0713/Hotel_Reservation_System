@@ -106,13 +106,19 @@ public class ViewRoomService{
 		for(int i=0; i<roomList.size();i++) {
 			roomNumberCombo.addItem(roomList.get(i).getRoomNumber());
 		}
+		
 		totalPriceLabel = new JLabel("합계 : " + totalPrice + " 원");
 		clearButton = new JButton("초기화하기");
 		orderButton = new JButton("주문하기");
 		
 		
-		roomNumberLabel.setBounds(tempOrderScroll.getX()+tempOrderScroll.getWidth()+40, tempOrderScroll.getY()+10, 80, 20);
-		roomNumberCombo.setBounds(roomNumberLabel.getX()+roomNumberLabel.getWidth()+10, roomNumberLabel.getY(), 100, 20);
+		roomNumberLabel.setBounds(tempOrderScroll.getX()+tempOrderScroll.getWidth()+40, tempOrderScroll.getY()+10, 60, 20);
+		roomNumberCombo.setBounds(roomNumberLabel.getX()+roomNumberLabel.getWidth(), roomNumberLabel.getY(), (menuScroll.getX()+menuScroll.getWidth())-(roomNumberLabel.getX()+roomNumberLabel.getWidth())+5, 20);
+		if(roomNumberCombo.getWidth() < 80) {
+			roomNumberCombo.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 11));
+		}else {
+			roomNumberCombo.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
+		}
 		totalPriceLabel.setBounds(roomNumberLabel.getX(), roomNumberLabel.getY()+roomNumberLabel.getHeight()+10, 200, 20);
 		int tempheight = orderListScroll.getHeight()-totalPriceLabel.getY()-totalPriceLabel.getHeight()-10;
 		tempheight/=2;
@@ -189,7 +195,14 @@ public class ViewRoomService{
 		try {
 			JLabel[] imgs = new JLabel[dishList.size()];
 			JLabel[] text = new JLabel[dishList.size()];
-			int space = (menuScroll.getWidth()-(124*3))/4;
+			int itemNum = 3;//default item count in a row
+			int space = (menuScroll.getWidth()-(124*itemNum))/(itemNum+1);
+			if(space < 20) {
+				itemNum = 2;
+			}else if(space >= 80) {
+				itemNum = 4;
+			}
+			space = (menuScroll.getWidth()-(124*itemNum))/(itemNum+1);
 			int weight = 50;
 			int x = space;
 			int y = weight;
@@ -198,7 +211,7 @@ public class ViewRoomService{
 			int menuHeight = 140;
 			int totalHeight = y+menuHeight+weight;
 			for(int i = 0; i<dishList.size();i++) {
-				if(i != 0 && i%3==0) {
+				if(i != 0 && i%itemNum==0) {
 					x = space;
 					y += menuHeight;
 					y += weight;
