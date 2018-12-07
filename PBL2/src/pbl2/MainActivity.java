@@ -24,6 +24,7 @@ import javax.swing.border.BevelBorder;
 import pbl2.controller.ViewCustomer;
 import pbl2.controller.ViewEmployee;
 import pbl2.controller.ViewReservation;
+import pbl2.controller.ViewRoom;
 import pbl2.controller.ViewRoomService;
 import pbl2.dto.DtoBookedRoom;
 import pbl2.dto.DtoCleanedRoom;
@@ -295,39 +296,14 @@ public class MainActivity implements ActionListener{
 	}
 
 	private void makeFirstPan() {
-		firstPan = new JPanel();
+		firstPan = new ViewRoom(bookedRoomList, roomList, customerList, receiptList, jtp.getWidth(), jtp.getHeight()).getPanel();
 		jtp.addTab("객실", null, firstPan, "현재 객실의 상태를 보여줍니다.");
-		JPanel listPan = new JPanel();
-		JLabel listLabel = new JLabel("<html>x:"+jtp.getX()+"<br> y:"+jtp.getY()+"</html>");
-		firstPan.setLayout(null);
-		System.out.println((int)jf.getHeight());
-		System.out.println(height);
-		listPan.setBounds(0, 0, (int)(jtp.getWidth()*0.05), jtp.getHeight());
-		listPan.add(listLabel);
-		listLabel.setForeground(Color.white);
-		listPan.setBackground(Color.BLACK);
-		firstPan.add(listPan);
-		
-		JPanel[] t = new JPanel[10];
-		JLabel[] p = new JLabel[10];
-		double temp = 0.05;
-		for(int i = 1; i < 10; i++) {
-			p[i-1] = new JLabel();
-			p[i-1].setText("<html>"+(i-1)+"<br>"+(int)jtp.getHeight()+"-"+i+"*10"+"<br>="+(int)(jtp.getHeight()-i*10)+"</html>");
-			p[i-1].setForeground(Color.WHITE);
-			t[i-1] = new JPanel();
-			t[i-1].setBounds((int)(Math.floor(jtp.getWidth()*temp)), 0, (int)(jtp.getWidth()*0.05), (int)(jtp.getHeight()-i*10));
-			t[i-1].add(p[i-1]);
-			t[i-1].setBackground(Color.black);
-			firstPan.add(t[i-1]);
-			temp += 0.05;
-		}
 		
 	}
 
 	private void makeSecondPan() {
 		secondPan = new ViewReservation(jtp.getWidth(), jtp.getHeight()).getPanel();
-		jtp.addTab("예약", null, secondPan, "캘린더창으로 이동합니다.");
+		jtp.addTab("예약", null, secondPan, "예약창으로 이동합니다.");
 	}
 
 	private void makeThirdPan() {
