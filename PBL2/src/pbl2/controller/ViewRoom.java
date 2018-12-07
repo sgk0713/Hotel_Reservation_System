@@ -1,39 +1,29 @@
 package pbl2.controller;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.BufferedInputStream;
-import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
+import java.util.Date;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
-
 import pbl2.SqlHelper;
-import pbl2.controller.ViewRoomService.QuantityDialog;
 import pbl2.dto.DtoBookedRoom;
 import pbl2.dto.DtoCustomer;
-import pbl2.dto.DtoDish;
 import pbl2.dto.DtoReceipt;
 import pbl2.dto.DtoRoom;
 
@@ -90,6 +80,7 @@ public class ViewRoom implements ActionListener {
 	}
 
 	private void makePan() {
+		updateState();
 		mainPan = new JPanel();
 		mainPan.setLayout(null);
 		mainPan.setSize(width, height);
@@ -142,6 +133,12 @@ public class ViewRoom implements ActionListener {
 			int x = space;
 			int y = space;
 			int totalHeight = 2*space+h;
+			
+			Date date = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd");
+			String dateStr = format.format(date);
+			date = format.parse(format.format(date));
+			
 		
 			for (int i = 0; i < num_room; i++) {
 				if(i != 0 && i%numItem==0) {
@@ -155,7 +152,7 @@ public class ViewRoom implements ActionListener {
 				JPanel pan = new JPanel();
 				pan.setLayout(null);
 				
-				JLabel statusLabel = new JLabel("예약가능", SwingConstants.CENTER);
+				JLabel statusLabel = new JLabel("입실가능", SwingConstants.CENTER);
 				JLabel colorLabel = new JLabel();
 				String roomNum = roomNumArr[i];
 				JLabel roomNumLabel = new JLabel(roomNum+"호", SwingConstants.CENTER);
@@ -172,13 +169,29 @@ public class ViewRoom implements ActionListener {
 				colorLabel.setBounds((int)(pan.getWidth()/2.0-colorW/2.0), statusLabel.getY()+statusLabel.getHeight()+10, colorW, (int)(colorW/15.0));
 				roomNumLabel.setBounds(0, (int)(h*0.70), w, 30);
 				
-				
-				if(i == 1) {
-					statusLabel.setText("입실불가");
-					colorLabel.setBackground(new Color(255,0,0));
-				}else if(i == 2) {
-					statusLabel.setText("청소중");
-					colorLabel.setBackground(new Color(255,185,0));
+				String q = "select rroomid, rroomnumber, rfloor, brstate, brdateenter, brdateexit from tblRoom, tblbookedroom where rroomid = brroomid and rroomnumber = "+roomNum+" and brdateenter <= '"+dateStr+"' and brdateexit >= '"+dateStr+"'";
+				rs = sql.query(q);
+				String roomId =null;
+				String state = null;
+				Date dateEnter = null;
+				Date dateExit = null;
+				while(rs.next()) {		
+					roomId = rs.getString(1);
+					state = rs.getString(4);
+					dateEnter = rs.getDate(5);
+					dateExit = rs.getDate(6);
+				}
+				if(dateExit != null) {
+					if(dateEnter.equals(date) && state.toUpperCase().equals("BOOKING")) {
+						statusLabel.setText("입실예약");
+						colorLabel.setBackground(new Color(255,185,0));
+					}else if(dateExit.equals(date) && state.toUpperCase().equals("CHECKIN")) {
+						statusLabel.setText("이용중");
+						colorLabel.setBackground(new Color(255,0,0));
+					}else {
+						statusLabel.setText("이용중");
+						colorLabel.setBackground(new Color(255,0,0));
+					}
 				}
 				
 				pan.addMouseListener(new MouseListener() {
@@ -199,7 +212,6 @@ public class ViewRoom implements ActionListener {
 						JOptionPane.showMessageDialog(null, roomNum+"호 클릭됨!!", roomNum+"호", JOptionPane.PLAIN_MESSAGE);
 					}
 				});
-				
 				
 				pan.add(statusLabel);
 				pan.add(colorLabel);
@@ -241,6 +253,50 @@ public class ViewRoom implements ActionListener {
 
 	private void serchroom() {
 
+	}
+	
+	private void updateState() {
+		try {
+			Date date = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd");
+			String dateStr = format.format(date);
+			
+			date = format.parse(format.format(date));
+			
+			String q = "select brbookid, rroomid, rroomnumber, rfloor, brstate, brdateenter, brdateexit from tblRoom, tblbookedroom where rroomid = brroomid and brdateexit < '"+dateStr+"'";
+			rs = sql.query(q);
+			String bookId = null;
+			String roomId =null;
+			String state = null;
+			Date dateEnter = null;
+			Date dateExit = null;
+			ArrayList<String> ar = new ArrayList<>();
+			while(rs.next()) {
+				ar.add(rs.getString(1));
+			}
+			for(int z = 0; z < ar.size(); z++) {
+				sql.query("update tblbookedroom set brstate = 'CheckOut' where brbookid = "+ar.get(z));
+			}
+			q = "select brbookid, rroomid, rroomnumber, rfloor, brstate, brdateenter, brdateexit from tblRoom, tblbookedroom where rroomid = brroomid and brdateenter < '"+dateStr+"' and brdateexit > '"+dateStr+"'";
+			rs = sql.query(q);
+			bookId = null;
+			roomId =null;
+			state = null;
+			dateEnter = null;
+			dateExit = null;
+			while(rs.next()) {
+				ar.add(rs.getString(1));
+			}
+			for(int z = 0; z < ar.size(); z++) {
+				sql.query("update tblbookedroom set brstate = 'CheckIn' where brbookid = "+ar.get(z));
+			}
+			sql.commit();
+			System.out.println("update tblBookedRoom state complete!");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public JPanel getPanel() {
