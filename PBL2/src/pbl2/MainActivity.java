@@ -42,7 +42,7 @@ import pbl2.dto.DtoRoom;
 
 public class MainActivity implements ActionListener{
 	private String auth;
-	private JFrame jf;
+	static public JFrame jf;
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem menuLogout;
@@ -336,7 +336,7 @@ public class MainActivity implements ActionListener{
 	}
 
 	private void makeFourthPan() {
-		fourthPan = new ViewRoomService().getPanel();
+		fourthPan = new ViewRoomService(dishList, dishOrderList, bookedRoomList, roomList, jtp.getWidth(), jtp.getHeight()).getPanel();
 		jtp.addTab("룸서비스", null, fourthPan, "룸서비스창으로 이동합니다.");
 	}
 
