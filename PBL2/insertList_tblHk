@@ -1,0 +1,5 @@
+INSERT INTO tblHk (hkEmployeeID, hkName, hkTime, hkState, hkFloor) VALUES (1003, 'Jesse', '2017-08-02 22:08:50.123456', '청소중',1)
+INSERT INTO tblHk (hkEmployeeID, hkName, hkTime, hkState, hkFloor) VALUES (1007, 'Angelica','2017-08-02 21:12:20.123456', '휴식',2)
+INSERT INTO tblHk (hkEmployeeID, hkName, hkTime, hkState, hkFloor) VALUES (1011, 'Taylor','2017-08-02 20:28:39.123456', '청소중',3)
+INSERT INTO tblHk (hkEmployeeID, hkName, hkTime, hkState, hkFloor) VALUES (1014, 'Alexander','2017-08-02 17:19:28.123456', '휴식',4)
+INSERT INTO tblHk (hkEmployeeID, hkName, hkTime, hkState, hkFloor) VALUES (1015, 'Jaden','2017-08-02 16:30:42.123456', '식사',5)

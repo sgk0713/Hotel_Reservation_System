@@ -1,0 +1,5 @@
+INSERT INTO tblrcFixture (rcfIndexID,rcfFixtureID,rcfName,rcfQuantity,rcfDate,rcfPhone) VALUES(1,1101,'towel',200,to_date('25/12/2018','DD/MM/YYYY'),'010-7511-1032')
+INSERT INTO tblrcFixture (rcfIndexID,rcfFixtureID,rcfName,rcfQuantity,rcfDate,rcfPhone) VALUES(2,1102,'pouch',150,to_date('25/12/2018','DD/MM/YYYY'),'010-7511-1032')
+INSERT INTO tblrcFixture (rcfIndexID,rcfFixtureID,rcfName,rcfQuantity,rcfDate,rcfPhone) VALUES(3,1103,'tissue',200,to_date('25/12/2018','DD/MM/YYYY'),'010-7511-1032')
+INSERT INTO tblrcFixture (rcfIndexID,rcfFixtureID,rcfName,rcfQuantity,rcfDate,rcfPhone) VALUES(4,1104,'Toilet shoes',300,to_date('25/12/2018','DD/MM/YYYY'),'010-7511-1032')
+INSERT INTO tblrcFixture (rcfIndexID,rcfFixtureID,rcfName,rcfQuantity,rcfDate,rcfPhone) VALUES(5,1105,'blanket',100,to_date('25/12/2018','DD/MM/YYYY'),'010-7511-1032')

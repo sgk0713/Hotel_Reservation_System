@@ -7,12 +7,14 @@ public class DtoHk {
 	private String name;
 	private Time time;
 	private String state;
-	public DtoHk(int employeeId, String name, Time time, String state) {
+	private int floor;
+	public DtoHk(int employeeId, String name, Time time, String state, int floor) {
 		super();
 		this.employeeId = employeeId;
 		this.name = name;
 		this.time = time;
 		this.state = state;
+		this.floor = floor;
 	}
 	public int getEmployeeId() {
 		return employeeId;
@@ -37,5 +39,11 @@ public class DtoHk {
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public int getFloor() {
+		return floor;
+	}
+	public void setFloor(int floor) {
+		this.floor = floor;
 	}
 }

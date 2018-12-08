@@ -23,6 +23,7 @@ import javax.swing.border.BevelBorder;
 
 import pbl2.controller.ViewCustomer;
 import pbl2.controller.ViewEmployee;
+import pbl2.controller.ViewHouseKeeper;
 import pbl2.controller.ViewReservation;
 import pbl2.controller.ViewRoom;
 import pbl2.controller.ViewRoomService;
@@ -208,7 +209,7 @@ public class MainActivity implements ActionListener{
 	                		}else if(i == 12) {//"TBLROOM"//12
 	                			roomList.add(new DtoRoom(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7), rs.getString(8)));
 	                		}else if(i == 13) {//"TBLHK"//13
-	                			hkList.add(new DtoHk(rs.getInt(1), rs.getString(2), rs.getTime(3), rs.getString(4)));
+	                			hkList.add(new DtoHk(rs.getInt(1), rs.getString(2), rs.getTime(3), rs.getString(4), rs.getInt(5)));
 	                		}
 	                		start++;
 	                		cur = (int)(((float)start/max)*100.0);
@@ -317,7 +318,7 @@ public class MainActivity implements ActionListener{
 	}
 
 	private void makeFifthPan() {
-		fifthPan = new JPanel();
+		fifthPan = new ViewHouseKeeper(employeeList, fixtureList, rcFixtureList, cleanedRoomList, roomList, hkList, jtp.getWidth(), jtp.getHeight()).getPanel();
 		jtp.addTab("하우스키퍼", null, fifthPan, "하우스키퍼창으로 이동합니다.");
 	}
 	private void makeSixthPan() {
