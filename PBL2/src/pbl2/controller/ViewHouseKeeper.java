@@ -282,8 +282,8 @@ public class ViewHouseKeeper implements ActionListener {
 
 	class ModifyDialog extends JDialog {
 
-		JLabel roomnum, complain, status, hk, namelabel, time, hkstatus, hkfloor, fixQuantity, fixDate, fixPhone;
-		JTextField roomnumInput, complainInputDialog, statusInput, hkInput, namelabelinput, timeInput, hkstatusInput,
+		JLabel roomnum, complain, status, hk, namelabel, time, hkstatus, hkfloor, fixQuantity, fixDate, fixPhone, statusInput;
+		JTextField roomnumInput, complainInputDialog, hkInput, namelabelinput, timeInput, hkstatusInput,
 				hkfloorInput, fixQuantityInput, fixDateInput, fixPhoneInput, namelabelInput;
 		JComboBox<Integer> room;
 		JButton modiButton = new JButton("수정");
@@ -305,7 +305,7 @@ public class ViewHouseKeeper implements ActionListener {
 			
 			room = new JComboBox<>();
 			complainInputDialog = new JTextField();
-			statusInput = new JTextField();
+			statusInput = new JLabel();
 			hkInput = new JTextField();
 			
 			int curRoomNum = Integer.valueOf((String)ArrangeModel.getValueAt(row, 0));
@@ -335,7 +335,7 @@ public class ViewHouseKeeper implements ActionListener {
 			y = 0;
 			room.setBounds(x, y += 30, 100, 30);
 			complainInputDialog.setBounds(x, y += 40, 200, 50);
-			statusInput.setBounds(x, y += 60, 70, 30);
+			statusInput.setBounds(x+5, y += 60, 70, 30);
 			hkInput.setBounds(x, y += 40, 70, 30);
 			modiButton.setBounds(p1.getWidth() / 2 - 80, p1.getHeight() - 70, 70, 30);
 			modiButton.addActionListener(new ActionListener() {
