@@ -36,7 +36,8 @@ public class CreateTable {
 				"insertList_tblDishOrder",
 				"insertList_tblRcFixture",
 				"insertList_tblReceipt",
-				"insertList_tblRepair"
+				"insertList_tblRepair",
+				"insertList_tblHk"
 		};
 		for(int i = 0; i< list.length; i++) {
 			System.out.println(" ******* READING... < "+list[i]+" >... *******");

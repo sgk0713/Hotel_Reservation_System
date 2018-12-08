@@ -252,10 +252,9 @@ public class ViewHouseKeeper implements ActionListener {
 					data[2] = "해결 중";
 					data[3] = "미배치";
 					ArrangeModel.addRow(data);
+					complaininput.setText(null);
 				}
-
 			}
-
 		});
 
 		roomNumberCombo = new JComboBox<>();
@@ -284,7 +283,7 @@ public class ViewHouseKeeper implements ActionListener {
 	class ModifyDialog extends JDialog {
 
 		JLabel roomnum, complain, status, hk, namelabel, time, hkstatus, hkfloor, fixQuantity, fixDate, fixPhone;
-		JTextField roomnumInput, complainInput, statusInput, hkInput, namelabelinput, timeInput, hkstatusInput,
+		JTextField roomnumInput, complainInputDialog, statusInput, hkInput, namelabelinput, timeInput, hkstatusInput,
 				hkfloorInput, fixQuantityInput, fixDateInput, fixPhoneInput, namelabelInput;
 		JComboBox<Integer> room;
 		JButton modiButton = new JButton("수정");
@@ -303,13 +302,29 @@ public class ViewHouseKeeper implements ActionListener {
 			complain = new JLabel("요청사항 :");
 			status = new JLabel("상태         :");
 			hk = new JLabel("담당         :");
-			complainInput = new JTextField();
+			
+			room = new JComboBox<>();
+			complainInputDialog = new JTextField();
 			statusInput = new JTextField();
 			hkInput = new JTextField();
-			room = new JComboBox<>();
+			
+			int curRoomNum = Integer.valueOf((String)ArrangeModel.getValueAt(row, 0));
+			String curComplain = (String) ArrangeModel.getValueAt(row, 1);
+			String curStatus = (String) ArrangeModel.getValueAt(row, 2);
+			String curHk = (String) ArrangeModel.getValueAt(row, 3);
+			
 			for (int i = 0; i < roomList.size(); i++) {
+				if(roomList.get(i).getRoomNumber() == curRoomNum) {
+					curRoomNum = i;
+				}
 				room.addItem(roomList.get(i).getRoomNumber());
 			}
+			room.setSelectedIndex(curRoomNum);
+			complainInputDialog.setText(curComplain);
+			statusInput.setText(curStatus);
+			hkInput.setText(curHk);
+			
+			
 			int x = 10;
 			int y = 0;
 			roomnum.setBounds(x, y += 30, 90, 30);
@@ -318,8 +333,8 @@ public class ViewHouseKeeper implements ActionListener {
 			hk.setBounds(x, y += 40, 90, 30);
 			x += 70;
 			y = 0;
-			room.setBounds(x, y += 30, 70, 30);
-			complainInput.setBounds(x, y += 40, 200, 50);
+			room.setBounds(x, y += 30, 100, 30);
+			complainInputDialog.setBounds(x, y += 40, 200, 50);
 			statusInput.setBounds(x, y += 60, 70, 30);
 			hkInput.setBounds(x, y += 40, 70, 30);
 			modiButton.setBounds(p1.getWidth() / 2 - 80, p1.getHeight() - 70, 70, 30);
@@ -329,17 +344,22 @@ public class ViewHouseKeeper implements ActionListener {
 					// TODO Auto-generated method stub
 					int editedroom = Integer.valueOf(room.getSelectedItem().toString());
 					String msg = "\n방번호 : " + editedroom + "\n";
-					msg += "\n요청사항 : " + complainInput.getText() + "\n\n";
+					msg += "\n요청사항 : " + complainInputDialog.getText() + "\n\n";
 					int result = JOptionPane.showConfirmDialog(null, msg, room.getSelectedItem().toString() + "호 수정하기",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == 0) { // OK=0 , Cancel=2 리턴
-						String[] data = new String[4];
-						data[0] = String.valueOf(editedroom);
-						data[1] = complainInput.getText();
-						data[2] = statusInput.getText();
-						data[3] = hkInput.getText();
-						ArrangeModel.removeRow(row);
-						ArrangeModel.addRow(data);
+//						String[] data = new String[4];
+//						data[0] = String.valueOf(editedroom);
+//						data[1] = complainInput.getText();
+//						data[2] = statusInput.getText();
+//						data[3] = hkInput.getText();
+						ArrangeModel.setValueAt(String.valueOf(editedroom), row, 0);
+						ArrangeModel.setValueAt(complainInputDialog.getText(), row, 1);
+						ArrangeModel.setValueAt(statusInput.getText(), row, 2);
+						ArrangeModel.setValueAt(hkInput.getText(), row, 3);
+//						ArrangeModel.removeRow(row);
+//						ArrangeModel.addRow(data);
+						dispose();
 					}
 				}
 
@@ -351,6 +371,7 @@ public class ViewHouseKeeper implements ActionListener {
 					int result = JOptionPane.showConfirmDialog(null, "삭제하시겠습니까?", "삭제", JOptionPane.OK_CANCEL_OPTION);
 					if (result == 0) {
 						ArrangeModel.removeRow(row);
+						dispose();
 					}
 
 				}
@@ -361,7 +382,7 @@ public class ViewHouseKeeper implements ActionListener {
 			p1.add(status);
 			p1.add(hk);
 			p1.add(room);
-			p1.add(complainInput);
+			p1.add(complainInputDialog);
 			p1.add(statusInput);
 			p1.add(hkInput);
 			p1.add(modiButton);
