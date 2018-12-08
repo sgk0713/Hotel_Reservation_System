@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,7 +21,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
 import pbl2.SqlHelper;
 import pbl2.dto.DtoBookedRoom;
 import pbl2.dto.DtoCustomer;
@@ -57,11 +61,9 @@ public class ViewRoom implements ActionListener {
 	private String roomState;
 	private DefaultTableModel model;
 	private JTabbedPane showroomJtp;
-	private JPanel mainPan, statusPan;
+	private JPanel mainPan;
 	private JScrollPane scrollRoom[];
 	private JPanel floorPan[];
-	private JPanel roomPan[][];
-	private JLabel table_label[][];
 	private ArrayList<DtoBookedRoom> bookedRoomList;
 	private ArrayList<DtoRoom> roomList;
 	private ArrayList<DtoCustomer> customerList;
@@ -69,6 +71,12 @@ public class ViewRoom implements ActionListener {
 	private SqlHelper sql = pbl2.MainActivity.sql;
 	private ResultSet rs;
 	
+
+	   private JPanel statusPan, infoPan, roomInfoPan, reservationInfoPan, checkinInfoPan;
+	   private TitledBorder statusBorder = new TitledBorder(new LineBorder(Color.BLACK), "객실 인덱스");
+	   private TitledBorder infoBorder = new TitledBorder(new LineBorder(Color.BLACK), "객실 정보");
+	   private int roomId;
+	   
 	public ViewRoom(ArrayList<DtoBookedRoom> bookedRoomList, ArrayList<DtoRoom> roomList, ArrayList<DtoCustomer> customerList, ArrayList<DtoReceipt> receiptList, int width, int height) {
 		this.bookedRoomList = bookedRoomList;
 		this.roomList = roomList;
@@ -110,6 +118,24 @@ public class ViewRoom implements ActionListener {
 			scrollRoom[i].setViewportView(floorPan[i]);
 			showroomJtp.addTab((i + 1) + "층", null, scrollRoom[i], (i + 1) + "층 객실정보");
 		}
+
+
+		infoPan = new JPanel();
+		roomInfoPan = new JPanel();
+		reservationInfoPan = new JPanel();
+		checkinInfoPan = new JPanel();
+		
+		infoPan.setBorder(infoBorder);
+		infoPan.setBounds(showroomareawidth, 25, width - showroomareawidth, height-38);
+		roomInfoPan.setBounds(showroomareawidth, 25, width - showroomareawidth, height-38);
+		reservationInfoPan.setBounds(showroomareawidth, 25, width - showroomareawidth, height-38);
+		checkinInfoPan.setBounds(showroomareawidth, 25, width - showroomareawidth, height-38);
+
+		infoPan.add(roomInfoPan);
+		infoPan.add(reservationInfoPan);
+		infoPan.add(checkinInfoPan);
+		
+		mainPan.add(infoPan);
 		mainPan.add(showroomJtp);
 	}
 
@@ -171,12 +197,12 @@ public class ViewRoom implements ActionListener {
 				
 				String q = "select rroomid, rroomnumber, rfloor, brstate, brdateenter, brdateexit from tblRoom, tblbookedroom where rroomid = brroomid and rroomnumber = "+roomNum+" and brdateenter <= '"+dateStr+"' and brdateexit >= '"+dateStr+"'";
 				rs = sql.query(q);
-				String roomId =null;
+				String roomIdStr =null;
 				String state = null;
 				Date dateEnter = null;
 				Date dateExit = null;
 				while(rs.next()) {		
-					roomId = rs.getString(1);
+					roomIdStr = rs.getString(1);
 					state = rs.getString(4);
 					dateEnter = rs.getDate(5);
 					dateExit = rs.getDate(6);
@@ -209,7 +235,40 @@ public class ViewRoom implements ActionListener {
 					}
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						JOptionPane.showMessageDialog(null, roomNum+"호 클릭됨!!", roomNum+"호", JOptionPane.PLAIN_MESSAGE);
+						try {
+		                     ResultSet rs = sql.query("select rroomid from tblRoom where rRoomNumber = "+ roomNum);
+		                     rs.next();
+		                     roomId = rs.getInt(1);         
+		                  }catch (SQLException e1) {
+		                     e1.printStackTrace();
+		                  }
+		                  
+		                  if(statusLabel.getText().equals("입실가능")) { // available status
+		                     roomInfoPan.removeAll();
+		                     if(roomInfoPan.isVisible()) {
+		                        roomInfoPan.setVisible(false);
+		                     }                     
+		                     makeRoomInfo(roomId);
+		                  }else if(statusLabel.getText().equals("이용중")) { // checkout status
+		                     roomInfoPan.removeAll();
+		                     if(roomInfoPan.isVisible()) {
+		                        roomInfoPan.setVisible(false);
+		                     }
+		                     makeRoomInfo(roomId);                     
+		                  }else if(statusLabel.getText().equals("이용중")) { //checkin status
+		                     checkinInfoPan.removeAll();
+		                     if(checkinInfoPan.isVisible()) {
+		                        checkinInfoPan.setVisible(false);
+		                     }
+		                     makeCheckinInfo(roomId);
+		                  }else if(statusLabel.getText().equals("입실예약")){ // booked status
+		                     reservationInfoPan.removeAll();
+		                     if(reservationInfoPan.isVisible()) {
+		                        reservationInfoPan.setVisible(false);
+		                     }
+		                     makeReservationInfo(roomId);
+		                  }
+						
 					}
 				});
 				
@@ -229,32 +288,113 @@ public class ViewRoom implements ActionListener {
 		}
 	}
 
-	private void makestatusPan() {
-		// TO-DO (GUI)
-	}
+	private void makeStatusPan() {
+	      statusPan.setBorder(statusBorder);
+	      // TO-DO (GUI)
+	   }
+
+	class comment {
+	//   private void showInfo(String roomNum, String roomState) {
+//	      try {
+//	         ResultSet rs = sql.query("select roomid from tblRoom where rRoomNum = "+ roomNum);
+//	         rs.next();
+//	         roomId = rs.getInt(1);         
+//	      }catch (SQLException e) {
+//	         e.printStackTrace();
+//	      }      
+//	      if(roomState.equals("예약가능")) {
+//	         try {
+//	            rs = sql.query("select roomId, rRoomNumber, viewType, roomType, bed from tblRoom where rRoomId = " + roomId);   
+//	            rs.next();
+//	         }catch(SQLException e) {
+//	            e.printStackTrace();
+//	         }
+//	      }else if(roomState.equals("입실불가")) { //체크인 상태
+//	         try {
+//	            rs = sql.query("select roomId, rRoomNumber, viewType, roomType, bed from tblRoom where rRoomId = " + roomId);   
+//	            rs.next();
+//	         }catch(SQLException e) {
+//	            e.printStackTrace();
+//	         }
+//	      }else if(roomState.equals("청소중")) { //체크아웃 상태
+//	         try {
+//	            rs = sql.query("select roomId, rRoomNumber, viewType, roomType, bed from tblRoom where rRoomId = " + roomId);   
+//	            rs.next();
+//	         }catch(SQLException e) {
+//	            e.printStackTrace();
+//	         }
+//	      }
+	//   }
+	   // 룸-북드룸 (얻을수 있는 정보 : 뷰타입, 룸타입,
+	   //
+	   //
+	   //
+	}   
+	   private void makeRoomInfo(int roomId){ // checkout 상태, 예약가능 상태일 때 보이기.
+		  roomId--;
+	      String viewType = roomList.get(roomId).getViewType();
+	      String roomType = roomList.get(roomId).getRoomType();
+	      String bed = roomList.get(roomId).getBed();
+
+	      JLabel viewTypelb = new JLabel(viewType);
+	      JLabel roomTypelb = new JLabel(roomType);
+	      JLabel bedlb = new JLabel(bed);
+	      
+	      roomInfoPan.add(viewTypelb);
+	      roomInfoPan.add(roomTypelb);
+	      roomInfoPan.add(bedlb);
+	      
+	      roomInfoPan.setVisible(true);
+	      reservationInfoPan.setVisible(false);
+	      checkinInfoPan.setVisible(false);
+	   }
+	   
+	   private void makeCheckinInfo(int roomId){ // booked 상태 일 때 보이기
+	      JLabel[] checkinInfo = new JLabel[8];
+	      try {
+	         rs = sql.query("select cName, brDateEnter, brDatEexit, brAdult, brChildren, rViewType, rRoomType, rBed from tblRoom, tblbookedroom, tblcustomer where rroomid = "+roomId+" and rroomid = brroomid and ccustomerid = brcustomerid");   
+	         rs.next();
+	         for(int i=0;i<checkinInfo.length;i++) {
+	            checkinInfo[i] = new JLabel(String.valueOf(rs.getObject(i+1)));
+	         }   
+	      }catch(SQLException e) {
+	         e.printStackTrace();
+	      }
+	      for(int i=0;i<checkinInfo.length;i++) {
+	         checkinInfoPan.add(checkinInfo[i]);
+	      }      
+	      roomInfoPan.setVisible(false);
+	      reservationInfoPan.setVisible(false);
+	      checkinInfoPan.setVisible(true);
+	   }
+
+	   private void makeReservationInfo(int roomId) { // check-in 상태일 때 보이기. 
+	      JLabel[] checkinInfo = new JLabel[8];
+	      try {
+	         rs = sql.query("select cName, brDateEnter, brDatEexit, brAdult, brChildren, rViewType, rRoomType, rBed from tblRoom, tblbookedroom, tblcustomer where rroomid = "+roomId+" and rroomid = brroomid and ccustomerid = brcustomerid");   
+	         int i  = 0;
+	         while(rs.next()) {
+	            checkinInfo[i] = new JLabel(String.valueOf(rs.getObject(i+1)));
+	            i++;
+	         }
+	      }catch(SQLException e) {
+	         e.printStackTrace();
+	      }
+	      
+	      for(int i=0;i<checkinInfo.length;i++) {
+	         checkinInfoPan.add(checkinInfo[i]);
+	      }
+	      roomInfoPan.setVisible(false);
+	      reservationInfoPan.setVisible(false);
+	      checkinInfoPan.setVisible(true);
+	   }
+	   
 
 	private void makeTableModel() {
 		String[] colName = { "ID", "hotelID", "roomNumber", "floor", "viewType", "price", "roomType", "bed" };
 		model = new DefaultTableModel(colName, 0);
 	}
 
-	// Function
-	private void showstateInfo() {
-	}
-
-	private void roomInfo() {
-	}
-
-	private void broomInfo() {
-	}
-
-	private void reservationInfo() {
-	}
-
-	private void serchroom() {
-
-	}
-	
 	private void updateState() {
 		try {
 			Date date = new Date();
