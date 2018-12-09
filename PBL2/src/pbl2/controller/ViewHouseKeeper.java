@@ -248,6 +248,10 @@ public class ViewHouseKeeper implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
+				if(complaininput.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "요청사항을 입력하세요.", "경고", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
 				int roomNum = Integer.valueOf(roomNumberCombo.getSelectedItem().toString());
 				String msg = "\n방번호 : " + roomNum + "\n";
 				msg += "\n요청사항 : " + complaininput.getText() + "\n\n";
@@ -290,11 +294,11 @@ public class ViewHouseKeeper implements ActionListener {
 
 	class ModifyDialog extends JDialog {
 
-		JLabel roomnum, complain, status, hk, namelabel, time, hkstatus, hkfloor, fixQuantity, fixDate, fixPhone,
-				statusInput;
-		JTextField roomnumInput, complainInputDialog, hkInput, namelabelinput, timeInput, hkstatusInput, hkfloorInput,
-				fixQuantityInput, fixDateInput, fixPhoneInput, namelabelInput;
+		JLabel roomnum, complain, status, hk, namelabel, time, hkstatus, hkfloor, fixQuantity, fixDate, fixPhone, statusInput;
+		JTextField roomnumInput, complainInputDialog, namelabelinput, timeInput, hkstatusInput,
+				hkfloorInput, fixQuantityInput, fixDateInput, fixPhoneInput, namelabelInput;
 		JComboBox<Integer> room;
+		JComboBox<String> hkInput;
 		JButton modiButton = new JButton("수정");
 		JButton cancelButton = new JButton("삭제");
 
@@ -311,19 +315,25 @@ public class ViewHouseKeeper implements ActionListener {
 			complain = new JLabel("요청사항 :");
 			status = new JLabel("상태         :");
 			hk = new JLabel("담당         :");
-
+			
 			room = new JComboBox<>();
 			complainInputDialog = new JTextField();
 			statusInput = new JLabel();
-			hkInput = new JTextField();
-
-			int curRoomNum = Integer.valueOf((String) ArrangeModel.getValueAt(row, 0));
+			hkInput = new JComboBox<String>();
+			
+			for(int i = 0; i < hkList.size();i++) {
+				if(hkList.get(i).getState().equals("대기중")) {
+					hkInput.addItem(hkList.get(i).getName());
+				}
+			}
+			
+			int curRoomNum = Integer.valueOf((String)ArrangeModel.getValueAt(row, 0));
 			String curComplain = (String) ArrangeModel.getValueAt(row, 1);
 			String curStatus = (String) ArrangeModel.getValueAt(row, 2);
 			String curHk = (String) ArrangeModel.getValueAt(row, 3);
-
+			
 			for (int i = 0; i < roomList.size(); i++) {
-				if (roomList.get(i).getRoomNumber() == curRoomNum) {
+				if(roomList.get(i).getRoomNumber() == curRoomNum) {
 					curRoomNum = i;
 				}
 				room.addItem(roomList.get(i).getRoomNumber());
@@ -331,8 +341,8 @@ public class ViewHouseKeeper implements ActionListener {
 			room.setSelectedIndex(curRoomNum);
 			complainInputDialog.setText(curComplain);
 			statusInput.setText(curStatus);
-			hkInput.setText(curHk);
-
+			
+			
 			int x = 10;
 			int y = 0;
 			roomnum.setBounds(x, y += 30, 90, 30);
@@ -343,8 +353,8 @@ public class ViewHouseKeeper implements ActionListener {
 			y = 0;
 			room.setBounds(x, y += 30, 100, 30);
 			complainInputDialog.setBounds(x, y += 40, 200, 50);
-			statusInput.setBounds(x + 5, y += 60, 70, 30);
-			hkInput.setBounds(x, y += 40, 70, 30);
+			statusInput.setBounds(x+5, y += 60, 70, 30);
+			hkInput.setBounds(x, y += 40, 100, 30);
 			modiButton.setBounds(p1.getWidth() / 2 - 80, p1.getHeight() - 70, 70, 30);
 			modiButton.addActionListener(new ActionListener() {
 				@Override
@@ -356,17 +366,10 @@ public class ViewHouseKeeper implements ActionListener {
 					int result = JOptionPane.showConfirmDialog(null, msg, room.getSelectedItem().toString() + "호 수정하기",
 							JOptionPane.OK_CANCEL_OPTION);
 					if (result == 0) { // OK=0 , Cancel=2 리턴
-//						String[] data = new String[4];
-//						data[0] = String.valueOf(editedroom);
-//						data[1] = complainInput.getText();
-//						data[2] = statusInput.getText();
-//						data[3] = hkInput.getText();
 						ArrangeModel.setValueAt(String.valueOf(editedroom), row, 0);
 						ArrangeModel.setValueAt(complainInputDialog.getText(), row, 1);
 						ArrangeModel.setValueAt(statusInput.getText(), row, 2);
-						ArrangeModel.setValueAt(hkInput.getText(), row, 3);
-//						ArrangeModel.removeRow(row);
-//						ArrangeModel.addRow(data);
+						ArrangeModel.setValueAt(hkInput.getSelectedItem(), row, 3);
 						dispose();
 					}
 				}
@@ -423,10 +426,10 @@ public class ViewHouseKeeper implements ActionListener {
 			hkfloor.setBounds(x, y += 40, 90, 30);
 			x += 70;
 			y = 0;
-			namelabelinput.setBounds(x, y += 40, 70, 30);
-			timeInput.setBounds(x, y += 40, 90, 30);
-			hkstatusInput.setBounds(x, y += 40, 70, 30);
-			hkfloorInput.setBounds(x, y += 40, 70, 30);
+			namelabelinput.setBounds(x, y += 40, 100, 30);
+			timeInput.setBounds(x, y += 40, 100, 30);
+			hkstatusInput.setBounds(x, y += 40, 100, 30);
+			hkfloorInput.setBounds(x, y += 40, 100, 30);
 			modiButton.setBounds(p2.getWidth() / 2 - 35, p2.getHeight() - 70, 70, 30);
 			modiButton.addActionListener(new ActionListener() {
 				@Override
@@ -518,9 +521,9 @@ public class ViewHouseKeeper implements ActionListener {
 			fixPhone.setBounds(x, y += 40, 90, 30);
 			x += 70;
 			y = 0;
-			namelabelInput.setBounds(x, y += 40, 70, 30);
-			fixQuantityInput.setBounds(x, y += 40, 90, 30);
-			fixDateInput.setBounds(x, y += 40, 70, 30);
+			namelabelInput.setBounds(x, y += 40, 120, 30);
+			fixQuantityInput.setBounds(x, y += 40, 120, 30);
+			fixDateInput.setBounds(x, y += 40, 120, 30);
 			fixPhoneInput.setBounds(x, y += 40, 120, 30);
 			modiButton.setBounds(p2.getWidth() / 2 - 35, p2.getHeight() - 70, 70, 30);
 

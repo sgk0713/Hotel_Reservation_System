@@ -10,8 +10,8 @@ public class Main {
 		 */
 		
 //		new CreateTable();//this method drops and puts all data on your database; make this as comment if you don't want to
-//		new LoginActivity();
-		new MainActivity("adm");
+		new LoginActivity();
+//		new MainActivity("adm");
 //		LogWriteHelper em = new LogWriteHelper("insertList_tblEmployee");
 //		em.append("INSERT INTO tblEmployee (eEmployId, eHotelId, eName, eDepartment, eGender, eDateEnter, ePosition, eSalary) VALUES ()");
 		
