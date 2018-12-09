@@ -1,21 +1,21 @@
 package pbl2.controller;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.image.PixelInterleavedSampleModel;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.io.BufferedInputStream;
 import java.sql.Blob;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,17 +25,15 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+
 import pbl2.SqlHelper;
-import pbl2.controller.ViewEmployee.ModifyDialog;
 import pbl2.dto.DtoBookedRoom;
 import pbl2.dto.DtoDish;
 import pbl2.dto.DtoDishOrder;
-import pbl2.dto.DtoEmployee;
 import pbl2.dto.DtoRoom;
 
 public class ViewRoomService{
@@ -47,7 +45,7 @@ public class ViewRoomService{
 	private ArrayList<DtoRoom> roomList;
 
 	private JLabel roomNumberLabel, totalPriceLabel;
-	private JComboBox<Integer> roomNumberCombo;
+	private static JComboBox<Integer> roomNumberCombo;
 	private DefaultTableModel model, tempModel;
 	private JButton orderButton, clearButton;
 	private JPanel mainPan, orderPan, menuPan;
@@ -73,7 +71,8 @@ public class ViewRoomService{
 		orderPan = new JPanel();
 		makeDefaultModel();
 		table = new JTable(model);
-		table.setDefaultEditor(Object.class, null);	
+		table.setDefaultEditor(Object.class, null);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		orderListScroll = new JScrollPane(table);
 		int orderPanWidth =  (int)(width * 0.4);
 		int orderListScrollPanWidth = width-orderPanWidth;
@@ -97,15 +96,15 @@ public class ViewRoomService{
 		menuScroll.setViewportView(menuPan);
 		tempTable = new JTable(tempModel);
 		tempTable.setDefaultEditor(Object.class, null);
+		tempTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tempOrderScroll = new JScrollPane(tempTable);
 		tempOrderScroll.setBounds(menuScroll.getX(), menuScroll.getY()+menuScroll.getHeight()+20, (int)(menuScroll.getWidth()*0.6), orderListScroll.getHeight()-20-menuScroll.getHeight());
 		
 		
 		roomNumberLabel = new JLabel("방번호 : ");
+		//as!!
 		roomNumberCombo = new JComboBox<>();
-		for(int i=0; i<roomList.size();i++) {
-			roomNumberCombo.addItem(roomList.get(i).getRoomNumber());
-		}
+		makeCombo();
 		
 		totalPriceLabel = new JLabel("합계 : " + totalPrice + " 원");
 		clearButton = new JButton("초기화하기");
@@ -151,10 +150,33 @@ public class ViewRoomService{
 				msg += "주문하시겠습니까?";
 				int result = JOptionPane.showConfirmDialog(null, msg, roomNumberCombo.getSelectedItem().toString() +"호 주문하기", JOptionPane.OK_CANCEL_OPTION);
 				if (result == 0) { // OK=0 , Cancel=2 리턴
+					try {
+						
+					
+					ResultSet rs = sql.query("select count(*) from tblreceipt");
+					rs.next();
+					int index = rs.getInt(1)+1;
+					rs = sql.query("select brcustomerid from tblbookedroom, tblroom where brroomid = rroomid and rroomnumber = "+roomNum+" and brstate = 'CheckIn'");
+					rs.next();
+					int customId = rs.getInt(1);
+					String temp=null;
+					java.util.Date date = new java.util.Date();
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+					String dateStr = format.format(date);
+					String timeStr = format2.format(date);
+					
 					for(int i = 0; i< tempModel.getRowCount();i++) {
+						temp = "insert into tblreceipt (rcreceiptid, rccustomerid, rcdate, rctime, rcstatement, rcprice) values "
+								+ "("+(index++)+", "+customId+", '"+dateStr+"', '"+timeStr+"', '"+String.valueOf(tempModel.getValueAt(i, 0))+"', "+Integer.valueOf((String) tempModel.getValueAt(i, 2))+")";
+						sql.query(temp);
+						System.out.println(temp);
 						addData(String.valueOf(tempModel.getValueAt(i, 0)), Integer.valueOf((String) tempModel.getValueAt(i, 1)), roomNum, Integer.valueOf((String) tempModel.getValueAt(i, 2)));
 					}
 					clearButton.doClick();
+					}catch (Exception e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
@@ -472,6 +494,25 @@ public class ViewRoomService{
 												+doDishOrderID+", "+ doDishID + ", " + doBookID + ", '" + doDate +"', CURRENT_TIMESTAMP, "+doQuantity+", '"+ doDelivered+"')";
 		sql.query(q);
 		sql.commit();
+	}
+	
+	static void makeCombo() {
+		if(roomNumberCombo != null) {
+			java.util.Date date = new java.util.Date();
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String dateStr = format.format(date);
+			String temp = 
+					"select rroomnumber from tblRoom, tblbookedroom, tblcustomer where rroomid = brroomid and ccustomerid = brcustomerid and brdateenter <= '"+dateStr+"' and brdateexit >= '"+dateStr+"' and brstate = 'CheckIn'";
+			roomNumberCombo.removeAllItems();
+			try {
+				ResultSet rs = pbl2.MainActivity.sql.query(temp);
+				while(rs.next()) {
+					roomNumberCombo.addItem(rs.getInt(1));
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public JPanel getPanel() {

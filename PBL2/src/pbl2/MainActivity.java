@@ -48,9 +48,9 @@ public class MainActivity implements ActionListener{
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem menuLogout;
-	private JPanel firstPan, secondPan, thirdPan, fourthPan, fifthPan, sixthPan;
+	static public JPanel firstPan, secondPan, thirdPan, fourthPan, fifthPan, sixthPan;
 	private JLabel label;
-	private JTabbedPane jtp;
+	static public JTabbedPane jtp;
 	private double width, height;
 	static public ArrayList<DtoBookedRoom> bookedRoomList = new ArrayList<>();
 	static public ArrayList<DtoCleanedRoom> cleanedRoomList = new ArrayList<>();
@@ -238,14 +238,12 @@ public class MainActivity implements ActionListener{
 		width = screenSize.getWidth() * 0.8;
 		height = width * 0.6;
 		jf.setSize((int) width, (int) height);	
-		System.out.println("height : "+ (int)height + ", jf.getHeight() : " + jf.getHeight());
 		height -= 90;//remove tab size;
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setTitle("2 Jo SulNong-Tang");
 		
 		jtp = new JTabbedPane();
 		jtp.setBounds(0, 0, (int)width, (int)height);
-		System.out.println("jtp.width : "+ jtp.getWidth()+"jtp.height : "+ jtp.getHeight());
 		
 		makeMenu();
 		makePanWithAuth(auth);
@@ -287,6 +285,7 @@ public class MainActivity implements ActionListener{
 			makeFourthPan();
 			makeFifthPan();			
 		}else{//adm
+			jtp.addTab("객실", null, null, "현재 객실의 상태를 보여줍니다.");
 			makeFirstPan();
 			makeSecondPan();
 			makeThirdPan();
@@ -296,14 +295,16 @@ public class MainActivity implements ActionListener{
 		}
 	}
 
-	private void makeFirstPan() {
+	static public void makeFirstPan() {
 		firstPan = new ViewRoom(bookedRoomList, roomList, customerList, receiptList, jtp.getWidth(), jtp.getHeight()).getPanel();
-		jtp.addTab("객실", null, firstPan, "현재 객실의 상태를 보여줍니다.");
+		jtp.setComponentAt(0, firstPan);
+//		jtp.addTab("객실", null, firstPan, "현재 객실의 상태를 보여줍니다.");
 		
 	}
 
 	private void makeSecondPan() {
-		secondPan = new ViewReservation(jtp.getWidth(), jtp.getHeight()).getPanel();
+		secondPan = new ViewReservation(customerList, roomList, bookedRoomList, jtp.getWidth(), jtp.getHeight()).getPanel();
+//		secondPan = new ViewReservation(jtp.getWidth(), jtp.getHeight()).getPanel();
 		jtp.addTab("예약", null, secondPan, "예약창으로 이동합니다.");
 	}
 

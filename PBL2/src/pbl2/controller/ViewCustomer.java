@@ -27,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -51,7 +52,6 @@ public class ViewCustomer implements ActionListener{
 			searchPhoneInput.setVisible(true);
 			searchPhoneInput.setEnabled(true);
 			searchField.setText("이름 : ");
-			searchPhoneField.setText("전화번호  : ");
 			searchPhoneInput.setText(null);
 		}else if(e.getSource() == searchBtn) {
 			currList.clear();
@@ -65,6 +65,8 @@ public class ViewCustomer implements ActionListener{
 
 	private ArrayList<DtoCnM> list;
 	private ArrayList<DtoCnM> currList;
+	private ArrayList<DtoCustomer> customerList;
+	private ArrayList<DtoMileage> mileageList;
 	private int width, height, typeFlag;
 	private final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 	private DefaultTableModel model;
@@ -79,10 +81,12 @@ public class ViewCustomer implements ActionListener{
 	private ModifyDialog md;
 	private JScrollPane scroll;
 	
-	public ViewCustomer(ArrayList<DtoCustomer> clist, ArrayList<DtoMileage> mlist, int width, int height) {
+	public ViewCustomer(ArrayList<DtoCustomer> customerList, ArrayList<DtoMileage> mileageList, int width, int height) {
+		this.customerList = customerList;
+		this.mileageList = mileageList;
 		list = new ArrayList<>();
 		currList = new ArrayList<>();
-		combineCnM(clist, mlist);
+		combineCnM(customerList, mileageList);
 		this.width = width-30;
 		this.height = height;
 		makePan();
@@ -136,6 +140,7 @@ public class ViewCustomer implements ActionListener{
 		makeTableModel();
 		table = new JTable(model);
 		table.setDefaultEditor(Object.class, null);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {}
@@ -448,6 +453,20 @@ public class ViewCustomer implements ActionListener{
 	                    		temp.setAddress(tempaddress);
 	                    		temp.setCardNumber(tempcn);
 	                    		temp.setComment(tempcmt);
+	                    		
+	                    		
+	                    		for(int i = 0; i< customerList.size();i++) {
+	                    			if(customerList.get(i).getCustomerId() == temp.getCustomerId()) {
+	                    				customerList.get(i).setName(tempName);
+	                    				customerList.get(i).setPhone(tempPhone);
+	                    				customerList.get(i).setEmail(tempEmail);
+	                    				customerList.get(i).setAddress(tempaddress);
+	                    				customerList.get(i).setCardNumber(tempcn);
+	                    				customerList.get(i).setComment(tempcmt);
+	                    				break;
+	                    			}
+	                    		}
+	                    		
 	                    		for(int i = 0; i < list.size();i++) {
 	    							if(list.get(i).getCustomerId() == temp.getCustomerId()) {
 	    								list.set(i, temp);
@@ -561,7 +580,7 @@ public class ViewCustomer implements ActionListener{
 			public void keyPressed(KeyEvent e) {}
 		});
 		
-		searchPhoneField = new JLabel("전화번호  : " );
+		searchPhoneField = new JLabel("전화번호 뒷번호 : ");
 		searchPhoneInput = new JTextField();
 		searchPhoneInput.addKeyListener(new KeyListener() {
 			@Override
@@ -596,8 +615,8 @@ public class ViewCustomer implements ActionListener{
 		int x = regiSearchJtp.getWidth()/2-totalFieldWidth/2;
 		int space = 10;
 		int y = 10;
-		int fieldW = 70;
-		int inputW = 200;
+		int fieldW = 100;
+		int inputW = 150;
 		int h = 20;
 		int weight = ((regiSearchJtp.getHeight())/7);
 		searchPan.setLayout(null);
@@ -832,12 +851,20 @@ public class ViewCustomer implements ActionListener{
 															+"\ncomment    : " + comment, "확인", JOptionPane.OK_CANCEL_OPTION);
             if (result == 0) { //OK=0 , Cancel=2 리턴
         		DtoCnM dto = new DtoCnM(id, name, phone, email, address, cardnumber, comment, mileage);
+        		customerList.add(new DtoCustomer(id, name, phone, email, address, cardnumber, comment));
+        		mileageList.add(new DtoMileage(id, mileage));
         		list.add(dto);
         		String query = "INSERT INTO tblCustomer (cCustomerID,cName,cPhone,cEmail,cAddress,cCardNumber,cComment) VALUES ("+id+",'"+name+"','"+phone+"','"+email+"','"+address+"','"+cardnumber+"', '"+comment+"')";
         		pbl2.MainActivity.sql.query(query);
         		query = "INSERT INTO tblMileage (mCustomerID, mMileage) VALUES ("+id+",'"+mileage+"')";
         		pbl2.MainActivity.sql.query(query);
         		currList.add(dto);
+        		nameInput.setText(null);
+        		phoneInput.setText(null);
+        		emailInput.setText(null);
+        		addressInput.setText(null);
+        		cardnumberInput.setText(null);
+        		commentInput.setText(null);
         		updateTableView();
         	}
 		}
@@ -887,9 +914,9 @@ public class ViewCustomer implements ActionListener{
 				id = Integer.valueOf(searchInput.getText());
 			}
 			for(int i = 0; i < list.size(); i++) {
-				if(id != -1 && list.get(i).getCustomerId() == id) {
+				if(id == -1) {
 					currList.add(list.get(i));
-				}else {
+				}else if(list.get(i).getCustomerId() == id){
 					currList.add(list.get(i));
 				}
 			}

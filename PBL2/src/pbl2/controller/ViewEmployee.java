@@ -26,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -137,6 +138,7 @@ public class ViewEmployee implements ActionListener{
 		makeTableModel();
 		table = new JTable(model);
 		table.setDefaultEditor(Object.class, null);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {}
@@ -676,6 +678,28 @@ public class ViewEmployee implements ActionListener{
 				
 			}
 		});
+		salaryInput.addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
+					return;
+				}
+				if(!Character.isDigit(c)) {
+					e.consume();
+					return;
+				}
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				
+			}
+		});
 		
 		salaryField.setBounds(x, y+=weight, fieldW, h);
 		salaryInput.setBounds(salaryField.getX()+salaryField.getWidth()+space, y, inputW, h);
@@ -780,6 +804,15 @@ public class ViewEmployee implements ActionListener{
         		pbl2.MainActivity.sql.query(query);
         		list.add(dto);
         		currList.add(dto);
+        		nameInput.setText(null);
+        		departInput.setText(null);
+        		maleRadio.setSelected(true);
+        		dateInput.setText(null);
+        		posiInput.setText(null);
+        		departInput.setText(null);
+        		salaryInput.setText(null);
+        		departCombo.setSelectedItem(departCombo.getItemAt(0));
+        		posiCombo.setSelectedItem(posiCombo.getItemAt(0));
         		updateTableView();
             }
 		}
@@ -824,10 +857,11 @@ public class ViewEmployee implements ActionListener{
 			if(!searchInput.getText().isEmpty()) {
 				id = Integer.valueOf(searchInput.getText());
 			}
+			System.out.println("id : " + id);
 			for(int i = 0; i < list.size(); i++) {
-				if(id != -1 && list.get(i).getEmployeeId() == id) {
+				if(id == -1) {
 					currList.add(list.get(i));
-				}else {
+				}else if(list.get(i).getEmployeeId() == id){
 					currList.add(list.get(i));
 				}
 			}

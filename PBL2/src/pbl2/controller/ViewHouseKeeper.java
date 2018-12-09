@@ -2,9 +2,13 @@ package pbl2.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 
@@ -19,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import pbl2.controller.ViewEmployee.ModifyDialog;
@@ -90,6 +95,7 @@ public class ViewHouseKeeper implements ActionListener {
 
 		Fixtable = new JTable(FixModel);
 		Fixtable.setDefaultEditor(Object.class, null);
+		Fixtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		Fixtable.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -136,6 +142,7 @@ public class ViewHouseKeeper implements ActionListener {
 
 		HKtable = new JTable(HKModel);
 		HKtable.setDefaultEditor(Object.class, null);
+		HKtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		HKtable.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -179,6 +186,7 @@ public class ViewHouseKeeper implements ActionListener {
 		});
 
 		ArrangeTable = new JTable(ArrangeModel);
+		ArrangeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		ArrangeTable.setDefaultEditor(Object.class, null);
 		ArrangeTable.addMouseListener(new MouseListener() {
 			@Override
@@ -282,9 +290,10 @@ public class ViewHouseKeeper implements ActionListener {
 
 	class ModifyDialog extends JDialog {
 
-		JLabel roomnum, complain, status, hk, namelabel, time, hkstatus, hkfloor, fixQuantity, fixDate, fixPhone, statusInput;
-		JTextField roomnumInput, complainInputDialog, hkInput, namelabelinput, timeInput, hkstatusInput,
-				hkfloorInput, fixQuantityInput, fixDateInput, fixPhoneInput, namelabelInput;
+		JLabel roomnum, complain, status, hk, namelabel, time, hkstatus, hkfloor, fixQuantity, fixDate, fixPhone,
+				statusInput;
+		JTextField roomnumInput, complainInputDialog, hkInput, namelabelinput, timeInput, hkstatusInput, hkfloorInput,
+				fixQuantityInput, fixDateInput, fixPhoneInput, namelabelInput;
 		JComboBox<Integer> room;
 		JButton modiButton = new JButton("수정");
 		JButton cancelButton = new JButton("삭제");
@@ -302,19 +311,19 @@ public class ViewHouseKeeper implements ActionListener {
 			complain = new JLabel("요청사항 :");
 			status = new JLabel("상태         :");
 			hk = new JLabel("담당         :");
-			
+
 			room = new JComboBox<>();
 			complainInputDialog = new JTextField();
 			statusInput = new JLabel();
 			hkInput = new JTextField();
-			
-			int curRoomNum = Integer.valueOf((String)ArrangeModel.getValueAt(row, 0));
+
+			int curRoomNum = Integer.valueOf((String) ArrangeModel.getValueAt(row, 0));
 			String curComplain = (String) ArrangeModel.getValueAt(row, 1);
 			String curStatus = (String) ArrangeModel.getValueAt(row, 2);
 			String curHk = (String) ArrangeModel.getValueAt(row, 3);
-			
+
 			for (int i = 0; i < roomList.size(); i++) {
-				if(roomList.get(i).getRoomNumber() == curRoomNum) {
+				if (roomList.get(i).getRoomNumber() == curRoomNum) {
 					curRoomNum = i;
 				}
 				room.addItem(roomList.get(i).getRoomNumber());
@@ -323,8 +332,7 @@ public class ViewHouseKeeper implements ActionListener {
 			complainInputDialog.setText(curComplain);
 			statusInput.setText(curStatus);
 			hkInput.setText(curHk);
-			
-			
+
 			int x = 10;
 			int y = 0;
 			roomnum.setBounds(x, y += 30, 90, 30);
@@ -335,7 +343,7 @@ public class ViewHouseKeeper implements ActionListener {
 			y = 0;
 			room.setBounds(x, y += 30, 100, 30);
 			complainInputDialog.setBounds(x, y += 40, 200, 50);
-			statusInput.setBounds(x+5, y += 60, 70, 30);
+			statusInput.setBounds(x + 5, y += 60, 70, 30);
 			hkInput.setBounds(x, y += 40, 70, 30);
 			modiButton.setBounds(p1.getWidth() / 2 - 80, p1.getHeight() - 70, 70, 30);
 			modiButton.addActionListener(new ActionListener() {
@@ -499,7 +507,7 @@ public class ViewHouseKeeper implements ActionListener {
 			fixDate = new JLabel("날짜      :");
 			fixPhone = new JLabel("번호      :");
 			namelabelInput = new JTextField(dto.getName());
-			fixQuantityInput = new JTextField();
+			fixQuantityInput = new JTextField(String.valueOf(dto.getQuantity()));
 			fixDateInput = new JTextField(String.valueOf(dto.getDate()));
 			fixPhoneInput = new JTextField(String.valueOf(dto.getPhone()));
 			int x = 10;
@@ -515,6 +523,90 @@ public class ViewHouseKeeper implements ActionListener {
 			fixDateInput.setBounds(x, y += 40, 70, 30);
 			fixPhoneInput.setBounds(x, y += 40, 120, 30);
 			modiButton.setBounds(p2.getWidth() / 2 - 35, p2.getHeight() - 70, 70, 30);
+
+			fixQuantityInput.addKeyListener(new KeyListener() {
+				@Override
+				public void keyTyped(KeyEvent e) {
+					char c = e.getKeyChar();
+					int len = fixQuantityInput.getText().length();
+					if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
+						return;
+					}
+					if (!Character.isDigit(c)) {
+						e.consume();
+						return;
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+
+				}
+			});
+			fixDateInput.addKeyListener(new KeyListener() {
+				@Override
+				public void keyTyped(KeyEvent e) {
+					char c = e.getKeyChar();
+					int len = fixDateInput.getText().length();
+					if (len < 10) {
+						if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
+							return;
+						}
+						if (!Character.isDigit(c)) {
+							e.consume();
+							return;
+						}
+						if (len == 4 || len == 7) {
+							fixDateInput.setText(fixDateInput.getText() + "-");
+						}
+					} else if (e.getKeyCode() != KeyEvent.VK_BACK_SPACE || e.getKeyCode() != KeyEvent.VK_DELETE) {
+						e.consume();
+						return;
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+				}
+			});
+			fixPhoneInput.addKeyListener(new KeyListener() {
+				@Override
+				public void keyTyped(KeyEvent e) {
+					char c = e.getKeyChar();
+					int len = fixPhoneInput.getText().length();
+					if (len < 13) {
+						if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
+							return;
+						}
+						if (!Character.isDigit(c)) {
+							e.consume();
+							return;
+						}
+						if (len == 3 || len == 8) {
+							fixPhoneInput.setText(fixPhoneInput.getText() + "-");
+						}
+					} else if (e.getKeyCode() != KeyEvent.VK_BACK_SPACE || e.getKeyCode() != KeyEvent.VK_DELETE) {
+						e.consume();
+						return;
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+				}
+			});
 			modiButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -524,19 +616,16 @@ public class ViewHouseKeeper implements ActionListener {
 						namelabeltemp = namelabelInput.getText();
 					}
 					int fixQuantitytemp = -1;
-					if (!fixQuantityInput.getText().isEmpty())
+					if (!fixQuantityInput.getText().isEmpty()) {
 						fixQuantitytemp = Integer.valueOf(fixQuantityInput.getText());
-
+					}
 					Date fixDatetemp = null;
 					if (!fixDateInput.getText().isEmpty())
 						fixDatetemp = Date.valueOf(fixDateInput.getText());
 
 					String fixPhonetemp = null;
-					try {
-						if (!fixPhoneInput.getText().isEmpty())
-							fixPhonetemp = (fixPhoneInput.getText());
-					} catch (Exception e1) {
-					}
+					if (!fixPhoneInput.getText().isEmpty())
+						fixPhonetemp = (fixPhoneInput.getText());
 					if (namelabeltemp == null || fixDatetemp == null || fixPhonetemp == null || fixQuantitytemp == -1) {
 						JOptionPane.showMessageDialog(null, "입력란을 확인해주세요.", "확인", JOptionPane.WARNING_MESSAGE);
 						return;
@@ -549,7 +638,7 @@ public class ViewHouseKeeper implements ActionListener {
 
 						if (result == 0) { // OK=0 , Cancel=2 리턴
 							dto.setName(namelabeltemp);
-							dto1.setQuantity(fixQuantitytemp);
+							dto.setQuantity(fixQuantitytemp);
 							dto.setDate(fixDatetemp);
 							dto.setPhone(fixPhonetemp);
 							int i = 0;
@@ -559,8 +648,29 @@ public class ViewHouseKeeper implements ActionListener {
 									break;
 								}
 							}
-							FixModel.removeRow(row);
-							addDataFixturestatusModel(dto, dto1);
+							
+							FixModel.setValueAt(dto.getName(), Fixtable.getSelectedRow(), 1);
+							FixModel.setValueAt(dto.getQuantity(), Fixtable.getSelectedRow(), 2);
+							FixModel.setValueAt(dto.getDate(), Fixtable.getSelectedRow(), 3);
+							FixModel.setValueAt(dto.getPhone(), Fixtable.getSelectedRow(), 4);
+							pbl2.MainActivity.sql
+									.query("UPDATE TBLRCFIXTURE set rcfName = '" + dto.getName() + "', rcfQuantity = "
+											+ dto.getQuantity() + ", rcfDate = '" + dto.getDate() + "', rcfPhone = '"
+											+ dto.getPhone() + "' where rcfFixtureID = " + dto.getFixtureId());
+							pbl2.MainActivity.sql.commit();
+							dispose();
+							ResultSet rs = pbl2.MainActivity.sql.query("select * from TBLRCFIXTURE");
+							try {
+								while (rs.next()) {
+									System.out.println("FixtureID: " + rs.getInt("rcfFixtureID"));
+									System.out.println("Name: " + rs.getString("rcfName"));
+									System.out.println("Quantity: " + rs.getInt("rcfQuantity"));
+									System.out.println("Phone: " + rs.getString("rcfPhone"));
+								}
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 //							pbl2.MainActivity.sql.query("UPDATE tblHk set hkName = '"+dto.getName()+"', hkTime = '"+ dto.getTime()
 //							+"', hkState = '" + dto.getState() + "', hkFloor = '" + dto.getFloor() + "where hkEmployeeID = " + dto.getEmployeeId());
 //							pbl2.MainActivity.sql.commit();
@@ -613,7 +723,7 @@ public class ViewHouseKeeper implements ActionListener {
 		String[] data = new String[5];
 		data[0] = String.valueOf(dto.getFixtureId());
 		data[1] = String.valueOf(dto.getName());
-		data[2] = String.valueOf(dto1.getQuantity());
+		data[2] = String.valueOf(dto.getQuantity());
 		data[3] = String.valueOf(dto.getDate());
 		data[4] = String.valueOf(dto.getPhone());
 		FixModel.addRow(data);
