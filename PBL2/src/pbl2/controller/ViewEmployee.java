@@ -373,8 +373,6 @@ public class ViewEmployee implements ActionListener{
 	            			&& posiC.getSelectedItem().equals(dto.getPosition()) && dateInput.getText().equals(dto.getDateEnter()+"") 
 	            			&& salInput.getText().equals(dto.getSalary()+"")){
 	            		JOptionPane.showConfirmDialog(null, "수정사항이 없습니다.", "확인", JOptionPane.PLAIN_MESSAGE);
-	            		System.out.println("no change");
-	            		System.out.println();
 	            		dispose();
 	            	}else {
 	            		String tempName = null;
@@ -857,7 +855,6 @@ public class ViewEmployee implements ActionListener{
 			if(!searchInput.getText().isEmpty()) {
 				id = Integer.valueOf(searchInput.getText());
 			}
-			System.out.println("id : " + id);
 			for(int i = 0; i < list.size(); i++) {
 				if(id == -1) {
 					currList.add(list.get(i));

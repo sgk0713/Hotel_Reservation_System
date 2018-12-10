@@ -76,7 +76,10 @@ public class ViewRoom implements ActionListener {
 	}
 
 	private void makePan() {
-		updateState();
+		if(pbl2.MainActivity.flag == 0) {
+			updateState();
+			pbl2.MainActivity.flag = 1;
+		}
 		pbl2.controller.ViewRoomService.makeCombo();
 		mainPan = new JPanel();
 		mainPan.setLayout(null);
@@ -249,7 +252,6 @@ public class ViewRoom implements ActionListener {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						if(e.getButton() == 3) {
-							System.out.println("left");
 							if(statusLabel.getText().equals("이용중") || statusLabel.getText().equals("입실예약")) {
 								pbl2.MainActivity.jtp.setSelectedIndex(1);
 								pbl2.controller.ViewReservation.regiSearchJtp.setSelectedIndex(1);
@@ -505,9 +507,9 @@ public class ViewRoom implements ActionListener {
 
 			date = format.parse(format.format(date));
 
-			String q = "select brbookid, rroomid, rroomnumber, rfloor, brstate, brdateenter, brdateexit from tblRoom, tblbookedroom where rroomid = brroomid and brdateexit < '"
-					+ dateStr + "'";
-			System.out.println("dateStr:"+dateStr);
+			String q = "select brbookid, rroomid, rroomnumber, rfloor, brstate, brdateenter, brdateexit "
+					+ "from tblRoom, tblbookedroom "
+					+ "where rroomid = brroomid and brdateexit < '"+ dateStr + "'";
 			rs = sql.query(q);
 			String bookId = null;
 			String roomId = null;
@@ -522,9 +524,10 @@ public class ViewRoom implements ActionListener {
 			for (int z = 0; z < ar.size(); z++) {
 				sql.query("update tblbookedroom set brstate = 'CheckOut' where brbookid = " + ar.get(z));
 			}
+			
+			
 			q = "select brbookid, rroomid, rroomnumber, rfloor, brstate, brdateenter, brdateexit from tblRoom, tblbookedroom where rroomid = brroomid and brdateenter < '"
 					+ dateStr + "' and brdateexit > '" + dateStr + "'";
-			System.out.println(q);
 			rs = sql.query(q);
 			bookId = null;
 			roomId = null;
@@ -534,10 +537,10 @@ public class ViewRoom implements ActionListener {
 			ar.clear();
 			while (rs.next()) {
 				ar.add(rs.getString(1));
-				
 			}
 			for (int z = 0; z < ar.size(); z++) {
-				sql.query("update tblbookedroom set brstate = 'CheckIn' where brbookid = " + ar.get(z));
+				String s = "update tblbookedroom set BRSTATE = 'CheckIn' where brbookid = " + ar.get(z);
+				sql.query(s);
 			}
 			sql.commit();
 			System.out.println("update tblBookedRoom state complete!");

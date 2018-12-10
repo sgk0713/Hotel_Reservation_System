@@ -66,6 +66,7 @@ public class MainActivity implements ActionListener{
 	static public ArrayList<DtoReceipt> receiptList = new ArrayList<>();
 	static public ArrayList<DtoRepair> repairList = new ArrayList<>();
 	static public ArrayList<DtoRoom> roomList = new ArrayList<>();
+	static public int flag = 0;
 	
 	private String[] tableList = {
 			"TBLBOOKEDROOM"//0

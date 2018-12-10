@@ -381,8 +381,6 @@ public class ViewCustomer implements ActionListener{
 	            			&& emailInput.getText().equals(temp.getEmail()) && aInput.getText().equals(temp.getAddress()) 
 	            			&& cardInput.getText().equals(temp.getCardNumber()) && commentInput.getText().equals(temp.getComment())){
 	            		JOptionPane.showConfirmDialog(null, "수정사항이 없습니다.", "확인", JOptionPane.PLAIN_MESSAGE);
-	            		System.out.println("no change");
-	            		System.out.println();
 	            		dispose();
 	            	}else {
 	            		String tempName = null;
@@ -819,14 +817,6 @@ public class ViewCustomer implements ActionListener{
 		
 		int mileage = 0;
 
-		System.out.println("name:" + name);
-		System.out.println("phone : " + phone);
-		System.out.println("E-Mail : " + email);
-		System.out.println("address : " + address);
-		System.out.println("cardnumber : " + cardnumber);
-		System.out.println("comment : " + comment);
-		System.out.println("mileage : "+mileage);
-		
 		if(phone.equals("wrong")) {
 			JOptionPane.showMessageDialog(null, "전화번호를 확인해주세요.","확인", JOptionPane.WARNING_MESSAGE);
 			return;

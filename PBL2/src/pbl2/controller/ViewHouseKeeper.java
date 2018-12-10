@@ -662,18 +662,6 @@ public class ViewHouseKeeper implements ActionListener {
 											+ dto.getPhone() + "' where rcfFixtureID = " + dto.getFixtureId());
 							pbl2.MainActivity.sql.commit();
 							dispose();
-							ResultSet rs = pbl2.MainActivity.sql.query("select * from TBLRCFIXTURE");
-							try {
-								while (rs.next()) {
-									System.out.println("FixtureID: " + rs.getInt("rcfFixtureID"));
-									System.out.println("Name: " + rs.getString("rcfName"));
-									System.out.println("Quantity: " + rs.getInt("rcfQuantity"));
-									System.out.println("Phone: " + rs.getString("rcfPhone"));
-								}
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
 //							pbl2.MainActivity.sql.query("UPDATE tblHk set hkName = '"+dto.getName()+"', hkTime = '"+ dto.getTime()
 //							+"', hkState = '" + dto.getState() + "', hkFloor = '" + dto.getFloor() + "where hkEmployeeID = " + dto.getEmployeeId());
 //							pbl2.MainActivity.sql.commit();

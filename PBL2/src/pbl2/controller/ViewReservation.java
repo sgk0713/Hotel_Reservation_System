@@ -226,6 +226,7 @@ public class ViewReservation implements ActionListener, KeyListener, MouseListen
 			try {
 				String temp = "select brbookid from tblbookedroom, tblroom, tblcustomer where brroomid = rroomid and brcustomerid=ccustomerid and brstate != 'CheckOut' and brstate != 'NoShow' and upper(cname) = upper('"+tempName+"') and rroomnumber = "+tempRoomNum+" and brdateenter = '"+tempEnter.substring(0, 10)+"'";
 				rs = sql.query(temp);
+				
 				rs.next();
 				int bookId = rs.getInt(1);
 				
@@ -238,8 +239,9 @@ public class ViewReservation implements ActionListener, KeyListener, MouseListen
 					state = "NoShow";
 				}
 				
-				temp = "update tblbookedroom set BRSTATE = '"+state+"' where brbookid = "+bookId;
+				temp = "UPDATE TBLBOOKEDROOM SET BRSTATE = '"+state+"' WHERE BRBOOKID = "+bookId;				
 				sql.query(temp);
+				sql.commit();
 				for(int i =0; i<bookedRoomList.size();i++) {
 					if(bookedRoomList.get(i).getBookId() == bookId) {
 						bookedRoomList.get(i).setState(state);
@@ -707,7 +709,6 @@ public class ViewReservation implements ActionListener, KeyListener, MouseListen
 					+ " and brdateexit < "
 					+ "'"+dateEnter+"' and brstate = 'Booking' or brstate = 'CheckIn') or "
 					+ "(brdateenter < '"+dateExit+"' and brdateexit >= '"+dateExit+"' and brstate = 'Booking' or brstate = 'CheckIn'))";
-			System.out.println(findRoomQuery);
 			for(int i = 0 ; i< bedCheckBox.length; i++) {
 				if(!bedCheckBox[i].isSelected()) {
 					findRoomQuery += " and rbed != '" + bedCheckBox[i].getText()+"'";

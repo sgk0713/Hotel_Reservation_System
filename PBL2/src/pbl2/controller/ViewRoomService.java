@@ -170,7 +170,6 @@ public class ViewRoomService{
 						temp = "insert into tblreceipt (rcreceiptid, rccustomerid, rcdate, rctime, rcstatement, rcprice) values "
 								+ "("+(index++)+", "+customId+", '"+dateStr+"', '"+timeStr+"', '"+String.valueOf(tempModel.getValueAt(i, 0))+"', "+Integer.valueOf((String) tempModel.getValueAt(i, 2))+")";
 						sql.query(temp);
-						System.out.println(temp);
 						addData(String.valueOf(tempModel.getValueAt(i, 0)), Integer.valueOf((String) tempModel.getValueAt(i, 1)), roomNum, Integer.valueOf((String) tempModel.getValueAt(i, 2)));
 					}
 					clearButton.doClick();
