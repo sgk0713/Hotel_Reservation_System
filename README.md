@@ -4,6 +4,9 @@
 - SQL*Plus
 - Developed on Mac
 
+### Demo Video is uploaded on here:
+https://drive.google.com/open?id=1G9wbRZPt9EVKW9FcdrqsvytJiZPIQoY1
+
 ### READ ME!!
 - You may need to change **jdbc libraries** on Windows OS
 - CHECK OUT the SqlHelper.java file
